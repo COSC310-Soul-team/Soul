@@ -1,0 +1,1 @@
+fprintf('I have read the Assignment Rules and agree to abide by them in this course.')
