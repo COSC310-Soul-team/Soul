@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.container {
+    display: flex;
+    border-radius: 25px;
+}
+
+.admin-info {
+    border-radius: 10px;
+    margin: auto;
+    background: #7c77ed;
+    padding: 20px;
+    text-align: center;
+}
+
+.element {
+    width: 10%;
+}
+
+.courses {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #f3f664;
+    padding: 20px;
+}
+.todo {
+    width: 10%;
+    float: right;
+}
+
+.admin-info, .container {
+    margin-bottom: 20px;
+}
+
+.element, .courses, .todo {
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
+
+.admin-info h2, .courses h2 {
+    color: #333;
+}
+.course-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.course-list li {
+    margin: 10px;
+    padding: 20px;
+    background: #eee;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.course-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.course-list a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+li{
+    margin-top: 1em;
+}
+
+ol.todo-list {
+    list-style-type: decimal;
+    margin: auto;
+}
