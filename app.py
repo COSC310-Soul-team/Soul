@@ -8,9 +8,10 @@ cur = con.cursor()
 id=0
 lock = threading.Lock()
 
-# res=cur.execute("INSERT INTO users VALUES (2,'xu',333)")
-con.commit()
 # cur.execute("CREATE TABLE users(id, name, password)")
+# res=cur.execute("INSERT INTO users VALUES (2,'xu',333)")
+# con.commit()
+
 
 
 app = Flask(__name__, static_url_path="/")
@@ -53,16 +54,35 @@ def login():
             user = cur.execute("SELECT * FROM users WHERE name='%s'"%username).fetchone() #比对前台输入和后台数据库
         finally:
             lock.release()
-        if len(user) > 0: #返回的非空数据（有用户）
+        if not user==None: #返回的非空数据（有用户）
             dbPassword = user[2]
-            user = user[0]
-        #if user and password == dbPassword:#password in db
-            session['user_id'] = user #valid user, save userid to session
-            return redirect(url_for('profile')) #redirect to profile
+            userId = user[0]
+            password=int(password)
+            dbPassword=int(dbPassword)
+            if password == dbPassword:#password in db
+                session['user_id'] = userId #valid user, save userid to session
+                return redirect(url_for('profile')) #redirect to profile
 
     return render_template("login.html")
 
-#登陆成功，用户界面
+# signup page
+# @app.route("/signup",method=['GET','POST'])
+# def signup():
+#     if request.method == 'POST':
+#         # sign up
+#         session.pop('user_id', None) #clean before signup
+#         username = request.form.get("username", None)
+#         password = request.form.get("password", None)
+#         # role = 1/2/3?
+#         data=[(role,username,password)]
+#         try:
+#             lock.acquire(True)
+#             user = cur.execute("INSERT INTO users VALUES(?, ?, ?)", data) #insert user into db
+#         finally:
+#             lock.release()
+#     return redirect(url_for('login'))  
+
+#logged in, profile page
 @app.route("/profile")
 def profile():
     #判断是否有该用户，没有则跳转回login界面
