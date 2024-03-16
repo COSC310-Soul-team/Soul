@@ -65,23 +65,6 @@ def login():
 
     return render_template("login.html")
 
-# signup page
-# @app.route("/signup",method=['GET','POST'])
-# def signup():
-#     if request.method == 'POST':
-#         # sign up
-#         session.pop('user_id', None) #clean before signup
-#         username = request.form.get("username", None)
-#         password = request.form.get("password", None)
-#         # role = 1/2/3?
-#         data=[(role,username,password)]
-#         try:
-#             lock.acquire(True)
-#             user = cur.execute("INSERT INTO users VALUES(?, ?, ?)", data) #insert user into db
-#         finally:
-#             lock.release()
-#     return redirect(url_for('login'))  
-
 #logged in, profile page
 @app.route("/profile")
 def profile():
@@ -91,7 +74,21 @@ def profile():
     
     return render_template("profile.html")
 
-@app.route("/logout")
-def logout():
-    session.pop("user_id", None)
-    return redirect(url_for('login'))
+
+#signup page
+@app.route("/signup")
+def signup():
+    # if request.method == 'POST':
+    #     # sign up
+    #     session.pop('user_id', None) #clean before signup
+    #     username = request.form.get("username", None)
+    #     password = request.form.get("password", None)
+    #     # role = 1/2/3?
+    #     data=[(id,username,password)]
+    #     try:
+    #         lock.acquire(True)
+    #         user = cur.execute("INSERT INTO users VALUES(?, ?, ?)", data) #insert user into db
+    #     finally:
+    #         lock.release()
+    print("sign up")
+    return render_template("signup.html")
