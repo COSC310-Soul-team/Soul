@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>upload file</title>
+
+        <style>
+            a{
+                text-decoration: none;
+                color: #2062e0;
+            }
+            a:hover{
+                text-decoration: none;
+                color: #2062e0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 align="center">TEST</h1>
+        <div align="center">
+            <form action="/uploader" method="post" enctype="multipart/form-data">
+                <br><br><br>
+                <input type="file" name="file" accept=".txt, .pdf, .doc, .docx, .md" value="{{ csrf_token }}" />
+                <br><br><br>
+                <input type="submit" value="sumbit" />
+            </form>
+
+            <br><br><br>
+        </div>
+    </body>
+</html>
