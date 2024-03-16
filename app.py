@@ -78,17 +78,17 @@ def profile():
 #signup page
 @app.route("/signup")
 def signup():
-    # if request.method == 'POST':
-    #     # sign up
-    #     session.pop('user_id', None) #clean before signup
-    #     username = request.form.get("username", None)
-    #     password = request.form.get("password", None)
-    #     # role = 1/2/3?
-    #     data=[(id,username,password)]
-    #     try:
-    #         lock.acquire(True)
-    #         user = cur.execute("INSERT INTO users VALUES(?, ?, ?)", data) #insert user into db
-    #     finally:
-    #         lock.release()
+    if request.method == 'POST':
+        # sign up
+        session.pop('user_id', None) #clean before signup
+        username = request.form.get("username", None)
+        password = request.form.get("password", None)
+        # role = 1/2/3?
+        data=[(id,username,password)]
+        try:
+            lock.acquire(True)
+            user = cur.execute("INSERT INTO users VALUES(?, ?, ?)", data) #insert user into db
+        finally:
+            lock.release()
     print("sign up")
     return render_template("signup.html")

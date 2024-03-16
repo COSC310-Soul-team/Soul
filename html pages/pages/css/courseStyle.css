@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+}
+.course-title {
+    color: #333;
+    text-align: center;
+    margin: 20px 0;
+}
+.instructor-info, .student-list {
+    margin-bottom: 20px;
+}
+.instructor-info h2, .student-list h2 {
+    color: #444;
+}
+.student-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+.student-list li {
+    background-color: #eee;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}

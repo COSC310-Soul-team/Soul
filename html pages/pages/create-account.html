@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Create Account</h2>
+    <form action="/submit-your-account-creation-form" method="post">
+        <div class="role-select">
+            <label for="roles">What is your role: </label>
+            <select name="roles" id="roles">
+                <option value="administrator">Administrator</option>
+                <option value="instructor">Instructor</option>
+                <option value="student">Student</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="new-userFirstName">First Name</label>
+            <input type="text" id="new-userFirstName" name="new-userFirstName" required>
+        </div>
+        <div class="input-group">
+            <label for="new-userLastName">Last Name</label>
+            <input type="text" id="new-userLastName" name="new-userLastName" required>
+        </div>
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="input-group">
+            <label for="new-password">Password</label>
+            <input type="password" id="new-password" name="new-password" required>
+        </div>
+        <div class="input-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+        <button type="submit" class="sign-in-btn">Create Account</button>
+    </form>
+</div>
+
+</body>
+</html>
