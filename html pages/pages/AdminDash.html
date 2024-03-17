@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .sidebar {
+        position: fixed; 
+        background-color: #f0f0f0;
+        padding: 40px; 
+        width: 190px;
+        height: 100%; 
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-content, .sign-out-container {
+        flex-grow: 1;
+    }
+    .sidebar-content h2, .sign-out-container a { 
+        margin-left: 10px;
+    }
+    .Admin-info {
+        margin-top: 10px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 50px; 
+    }
+    .sidebar a, .sign-out {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        margin-bottom: 10px;
+    }
+    .sidebar a:hover, .sign-out:hover {
+        background-color: #ddd;
+    }
+    .sign-out {
+        color: #333;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .sign-out:hover {
+        color: red; 
+        border-color: red; 
+        text-decoration: none; 
+        background-color: transparent; 
+    }
+    .Admin-info h3, .Admin-info p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+    }
+    .main-content {
+        margin-left: 310px;
+        flex-grow: 1;
+        padding: 30px; 
+        overflow-y: auto;
+        height: 100vh;
+        margin-bottom: 100em;
+    }
+    .course {
+        background-color: #e7e7e7;
+        margin: 10px 0;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 700px;
+    }
+
+    .addCourse {
+        background-color: #e7e7e7;
+        margin: 10px 0;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 700px;
+    }
+
+    #addCourseBtn {
+    font-size: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.addCourse {
+    position: relative; /* Ensure the dropdown can be absolutely positioned relative to this div */
+}
+
+#courseSelect {
+    position: relative;
+    top: 20px; /* Adjust as necessary */
+    left: 20px; /* Adjust as necessary */
+    margin-bottom: 10%;
+    z-index: 100; /* Ensure it appears above other content */
+}
+    .bottom {
+        margin: 10px 0;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 700px;
+    }
+
+    
+
+
+</style>
+
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h2>Dashboard</h2>
+        <a href="#">Home</a>
+        <a href="#">Requests</a>
+    </div>
+    <div class="Admin-info">
+        <h3>Admin Info</h3>
+        <p>Name Name</p>
+        <p>123456789</p>
+    </div>
+    <!-- Sign Out Button -->
+    <div class="sign-out-container">
+        <a class="sign-out" href="sign-out-page.html">Sign Out</a>
+    </div>
+</div>
+
+
+
+
+<div class="main-content">
+    <h1>All Courses</h1>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+    <div class="course">
+        <h2>COSC 310</h2>
+        <p>2023W2 Software Engineering</p>
+    </div>
+
+    <div class="addCourse">
+        <button id="addCourseBtn">+</button>
+        <!-- Initially hidden dropdown -->
+        <select id="courseSelect" style="display:none;">
+            <option value="COSC 310">COSC 310 - Software Engineering</option>
+            <option value="COSC 111">COSC 111 - Computer Programming I</option>
+            <option value="COSC 121">COSC 121 - Computer Programming II</option>
+            <!-- Add more courses as needed -->
+        </select>
+    </div>
+    
+    
+
+
+
+    <div class="bottom">
+    </div>
+    
+</div>
+
+<script>
+    document.getElementById('addCourseBtn').addEventListener('click', function() {
+    // Toggle the display of the dropdown
+    var courseSelect = document.getElementById('courseSelect');
+    courseSelect.style.display = courseSelect.style.display === 'none' ? 'block' : 'none';
+});
+
+    // When a course is selected, add it and hide the dropdown
+    document.getElementById('courseSelect').addEventListener('change', function() {
+    var courseCode = this.value;
+    var courseName = this.options[this.selectedIndex].text;
+    
+    // Create the div element for the new course
+    var newCourse = document.createElement('div');
+    newCourse.className = 'course';
+
+    // Create and add the h2 element for the course code
+    var courseTitle = document.createElement('h2');
+    courseTitle.textContent = courseCode; // Use the selected course code
+    newCourse.appendChild(courseTitle);
+
+    // Create and add the paragraph element for the course description
+    var courseDescription = document.createElement('p');
+    courseDescription.textContent = courseName; // Use the full text from the option
+    newCourse.appendChild(courseDescription);
+
+    // Find the .addCourse div to insert the new course before it
+    var addCourseDiv = document.querySelector('.addCourse');
+    document.querySelector('.main-content').insertBefore(newCourse, addCourseDiv);
+    
+    // Hide the dropdown
+    this.style.display = 'none';
+});
+
+// Hide dropdown if clicking outside
+document.addEventListener('click', function(event) {
+    var courseSelect = document.getElementById('courseSelect');
+    if (event.target.id !== 'addCourseBtn' && event.target.id !== 'courseSelect') {
+        courseSelect.style.display = 'none';
+    }
+});
+
+
+
+</script>
+
+
+</body>
+</html>
