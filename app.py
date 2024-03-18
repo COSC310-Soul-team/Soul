@@ -14,7 +14,6 @@ con = sqlite3.connect("tutorial.db",check_same_thread=False)
 cur = con.cursor()
 id=0
 lock = threading.Lock()
-
 # cur.execute("CREATE TABLE users(id, name, password)")
 # res=cur.execute("INSERT INTO users VALUES (2,'xu',333)")
 # con.commit()
@@ -33,54 +32,87 @@ def before_request():
         try:
             lock.acquire(True)
             user = cur.execute("SELECT * FROM users WHERE id=%d" % session['user_id']).fetchone() #find user in database
-            g.user = user#this is a tuple now
+            g.user = user #this is a tuple now
         finally:
             lock.release()
 
-# login界面
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # 登录操作
-        session.pop('user_id', None) #登陆前清空
+    
+        session.pop('user_id', None) 
         username = request.form.get("username", None)
         password = request.form.get("password", None)
         try:
             lock.acquire(True)
-            user = cur.execute("SELECT * FROM users WHERE name='%s'"%username).fetchone() #比对前台输入和后台数据库
+            user = cur.execute("SELECT * FROM users WHERE name='%s'"%username).fetchone() 
         finally:
             lock.release()
-        if not user==None: #返回的非空数据（有用户）
+        if not user==None: 
             dbPassword = user[2]
             userId = user[0]
-            password=int(password)
-            dbPassword=int(dbPassword)
-            if password == dbPassword:#password in db
-                session['user_id'] = userId #valid user, save userid to session
-                return redirect(url_for('profile')) #redirect to profile
+            password = password
+            if password == dbPassword: 
+                if str(userId).startswith('3'):
+                    session['user_id'] = userId
+                    return redirect(url_for('courses'))
+                elif str(userId).startswith('1'):
+                    session['user_id'] = userId
+                    return redirect(url_for('adminHomePage'))
+                elif str(userId).startswith('2'):
+                    session['user_id'] = userId
+                    return redirect(url_for('teacherHomePage'))
 
     return render_template("login.html")
 
-#logged in, profile page
-@app.route("/profile")
-def profile():
-    #判断是否有该用户，没有则跳转回login界面
-    if not g.user:
-        return redirect(url_for('login'))
-    
-    return render_template("profile.html")
+
+# studentHomePage
+@app.route("/studentHomePage")
+def studentHomePage():
+    return render_template("studentHomePage.html")
+
+# teacherHomePage
+@app.route("/teacherHomePage")
+def teacherHomePage():
+    return render_template("teacherHomePage.html")
+
+# adminHomePage
+@app.route("/adminHomePage")
+def adminHomePage():
+    return render_template("adminHomePage.html")
+
+
+
 
 
 # signup
 @app.route("/signup",methods=['GET', 'POST'])
 def signup():
+    global id
     if request.method == 'POST':
+        id+=1
+        print("post")
         # sign up
         session.pop('user_id', None) #clean before signup
-        username = request.form.get("username", None)
+        
+        role = request.form.get("roles",None)
+        firstName = request.form.get("new-userFirstName", None)
+        lastName = request.form.get("new-userLastName", None)
+        # username = request.form.get("username", None)
         password = request.form.get("password", None)
+        if role == "Administrator":
+            roleNum=1
+        elif role == "Instructor":
+            roleNum=2
+        else:
+            roleNum=3
+        userId=roleNum*1000+id
+        userName=firstName+" "+lastName
         # role = 1/2/3?
-        data=(1,username,password)
+        print(role)
+        data=(userId,userName,password)
+        print(data)
         try:
             lock.acquire(True)
             user = cur.execute("INSERT INTO users VALUES(?,?,?)",data) #insert user into db
@@ -89,6 +121,36 @@ def signup():
             lock.release()
         return redirect(url_for('login'))
     return render_template("signup.html")
+
+
+
+
+
+@app.route("/courses",methods=['GET','POST'])
+def courses():
+    # g.user=
+    courseList=cur.execute("SELECT * FROM courses").fetchall()
+    # courseList='\n'.join(courseList)
+    # courseList=list(courseList.split(" "))
+    # print(courseList[0])
+    courseNames=cur.execute("SELECT courseName FROM courses").fetchall()
+    studentInput=request.form.get("student_input",None)
+    print(studentInput)
+    for name in courseNames:
+        print(name[0])
+        if name[0]==studentInput:
+            data=(g.user[0],1,name[0])            
+            try:
+                lock.acquire(True)
+                cur.execute("INSERT INTO application VALUES(?,?)",data)
+                con.commit()
+            finally:
+                lock.release()
+            return render_template('courses.html',status="sent application",courseList=courseList)
+    return render_template('courses.html',courseList=courseList)
+
+
+
 
 
 
@@ -116,6 +178,11 @@ def uploader():
         return render_template('upload.html')
     
 
+
+
+
+
+
 # download file
 @app.route('/download', methods=['GET', 'POST'])
 def download():
@@ -138,7 +205,6 @@ def download():
     print(r'C:\Users\Haozhe XU\Desktop\COSC310\server') 
 
     return render_template('download.html', allname=Foder_Name, name=Files_Name)
-
 
 @app.route('/downloads/<path:path>', methods=['GET', 'POST'])
 def downloads(path):
