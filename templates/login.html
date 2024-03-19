@@ -1,93 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>E-learning platform</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!--===============================================================================================-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Video Streaming - Login</title>
+    <style>
+        .uniq-body1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: linear-gradient(125deg, #FFFF, #5db3d2);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.unique-header1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    color: #a5a3a3;
+    padding: 1em;
+    border-bottom: 2px solid rgb(94, 94, 174);
+    display: flex;
+    align-items: center;
+    background-image: linear-gradient(125deg, #eb9fc358, #428cd5);
+}
+
+.eyesicons {
+    cursor: pointer;
+    margin-left: -30px;
+}
+
+.unique-h1 {
+    font-size: 40px;
+    margin: 0;
+    color: black;
+}
+
+.unique-hlogin {
+    font-size: 24px;
+    margin: 20px 0;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100vh - 50px); /* Adjust height taking header into account */
+    background-image: linear-gradient(125deg, #4b7896, #65859a, #B0C4DE, #D6EAF8, #d4bea7dd, #B9A58F, #A28C74);
+    padding-top: 50px; /* Offset for fixed header */
+}
+
+.wrapper {
+    background-color: #fff;
+    width: 400px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 20px;
+}
+
+.sign-in {
+    background: #d4d6ee;
+    padding: 10px;
+    border-radius: 5px;
+    color: #884ed1;
+    margin: 10px 0;
+}
+
+.label_input1, .label_input2 {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 14px;
+}
+
+.text_field_login {
+    width: calc(100% - 40px); /* Adjust width considering padding */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.hint, .size {
+    margin: 10px 0;
+}
+
+.login_button {
+    background-color: rgb(58, 119, 251);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login_button:hover {
+    background-color: rgb(45, 95, 220);
+}
+
+.size a, .hint a {
+    color: #a7a7a7;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.size a:hover, .hint a:hover {
+    color: blue;
+}
+
+@media (max-width: 767px) {
+    .unique-h1 {
+        font-size: 24px; /* Smaller font size for smaller screens */
+    }
+
+    .wrapper {
+        width: 90%; /* More screen width usage on small screens */
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .text_field_login, .login_button {
+        width: 100%; /* Full width inputs and button for smaller screens */
+    }
+
+    .eyesicons {
+        margin-left: -25px; /* Adjust icon position on smaller screens */
+    }
+}
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+<body class='unique-body1'>
+    <header class="unique-header1">
+        <h1 class='unique-h1'>Welcome!</h1>
+    </header>
 
-<body>
-
-    <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100">
-                <div class="login100-form-title" style="background-image: url(images/bg-01.jpg);">
-                    <span class="login100-form-title-1">
-                        E-learning platfrom
-                    </span>
+    <div class='main'>
+        <div class='wrapper'>
+            <h2 class='unique-hlogin'>Sign in</h2>
+            <div class="sign-in">If you have an account, please sign in to unlock more features!</div>
+            <form class="login100-form validate-form" method="post" action="#">
+                <p>
+                    <label class="label_input1">Username: </label>
+                    <input type="text" class="text_field_login" id="username" name="username"/>
+                </p>
+                <p class="password-container">
+                    <label class="label_input2">Password: </label>
+                    <input type="password" id="password" name="password" class="text_field_login" />
+                    <i id="password-toggle-icon" class="fas fa-eye"></i>
+                </p>
+                <button type="button" id="btn_login" class="login_button">Login</button>
+                <div class="size">
+                    <a id="sign_up" href="signup">Sign up now &#8594;</a>
                 </div>
-
-                <form class="login100-form validate-form" method="post" action="#">
-                    <div class="wrap-input100 validate-input m-b-26" data-validate="username!">
-                        <span class="label-input100">username</span>
-                        <input class="input100" type="text" name="username" autocomplete="off">
-                        <span class="focus-input100"></span>
-                    </div>
-
-                    <div class="wrap-input100 validate-input m-b-18" data-validate="password!">
-                        <span class="label-input100">password</span>
-                        <input class="input100" type="password" name="password" autocomplete="off">
-                        <span class="focus-input100"></span>
-                    </div>
-
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn">
-                            login
-                        </button>
-                    </div>
-
-                    
-                    <div class="container-login100-form-btn">
-                        <a href="signup" class="login100-form-btn">Sign Up</a>
-                    </div>
-
-
-
-                </form>
-            </div>
+                <div class='hint'>
+                    <a id="forget_pw" href="forget_pw.html">Forgot your password?</a>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!--===============================================================================================-->
-    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/animsition/js/animsition.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/bootstrap/js/popper.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/select2/select2.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/daterangepicker/moment.min.js"></script>
-    <script src="vendor/daterangepicker/daterangepicker.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/countdowntime/countdowntime.js"></script>
-    <!--===============================================================================================-->
-    <script src="js/main.js"></script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleIcon = document.getElementById('password-toggle-icon');
+            toggleIcon.addEventListener('click', function () {
+                var passwordInput = document.getElementById('password');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
