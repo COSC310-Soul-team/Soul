@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Enrollment Requests</title>
+<title>Teacher Dashboard</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@
     .sidebar-content h2, .sign-out-container a {
         margin-left: 10px;
     }
-    .admin-info {
+    .Teacher-info {
         margin-top: 10px;
         border-top: 1px solid #ddd;
         padding-top: 10px;
@@ -59,7 +59,7 @@
         text-decoration: none;
         background-color: transparent;
     }
-    .admin-info h3, .admin-info p {
+    .Teacher-info h3, .Teacher-info p {
         margin: 0;
         padding: 0;
         font-size: 16px;
@@ -71,38 +71,16 @@
         overflow-y: auto;
         height: 100vh;
     }
-    .request-container {
-        width: 100%;
-        max-width: 800px;
-    }
-    .request {
+    .course {
         background-color: #e7e7e7;
-        border-radius: 8px;
-        margin-bottom: 10px;
+        margin: 10px 0;
         padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        border-radius: 8px;
+        max-width: 700px;
     }
-    .request-info {
-        font-size: 16px;
-    }
-    .action-buttons {
-        display: flex;
-        gap: 10px;
-    }
-    .approve, .deny {
-        border: none;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    .approve {
-        background-color: #4CAF50; /* Green */
-    }
-    .deny {
-        background-color: #f44336; /* Red */
+    .course-link {
+        text-decoration: none;
+        color: black;
     }
 </style>
 </head>
@@ -112,36 +90,39 @@
     <div class="sidebar-content">
         <h2>Dashboard</h2>
         <a href="#">Home</a>
-        <a href="#">Requests</a>
+        <a href="#">Assignments</a>
+        <a href="#">Discussion</a>
     </div>
-    <div class="admin-info">
-        <h3>Admin Info</h3>
+    <div class="Teacher-info">
+        <h3>Teacher Info</h3>
         <p>Name Name</p>
         <p>123456789</p>
     </div>
+    <!-- Sign Out Button -->
     <div class="sign-out-container">
         <a class="sign-out" href="sign-out-page.html">Sign Out</a>
     </div>
 </div>
 
 <div class="main-content">
-    <div class="request-container">
-        <h1>Enrollment Requests</h1>
-        <!-- Each request block -->
-        <div class="request">
-            <div class="request-info">
-                <p>Student: John Doe</p>
-                <p>Requesting: COSC 310 - Software Engineering</p>
-            </div>
-            <div class="action-buttons">
-                <button class="approve" id="REQUEST_ID">Approve</button>
-                <button class="deny" id="REQUEST_ID">Deny</button>
-            </div>
+    <h1>Courses</h1>
+    <!-- Wrapped course blocks in anchor tags for redirection -->
+    <a href="course-details-cosc310.html" class="course-link">
+        <div class="course">
+            <h2>COSC 310</h2>
+            <p>2023W2 Software Engineering</p>
         </div>
-        <!-- Repeat the above block for each request, ensuring each has a unique REQUEST_ID -->
-    </div>
+    </a>
+    <a href="course-details-cosc310.html" class="course-link">
+        <div class="course">
+            <h2>COSC 310</h2>
+            <p>2023W2 Software Engineering</p>
+        </div>
+    </a>
+    <!-- Repeat for each course with specific course detail page links -->
 </div>
-
 
 </body>
 </html>
+
+
