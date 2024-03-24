@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+</head>
+<body>
+    <h1>Create Quiz</h1>
+    <form method="POST">
+        <label for="quizName">Quiz Name:</label><br>
+        <input type="text" id="quizName" name="quizName"><br>
+        <!-- 注意：course 默认为 NULL -->
+        <input type="hidden" id="course" name="course" value="NULL"><br>
+
+        <!-- 题目输入框 -->
+        <div id="questions">
+            <!-- 初始显示一个题目输入框 -->
+            <div id="question_1">
+                <label for="question_1">Question 1:</label><br>
+                <input type="text" id="question_1" name="question_1"><br>
+                <label for="optionA_1">Option A:</label><br>
+                <input type="text" id="optionA_1" name="optionA_1"><br>
+                <label for="optionB_1">Option B:</label><br>
+                <input type="text" id="optionB_1" name="optionB_1"><br>
+                <label for="optionC_1">Option C:</label><br>
+                <input type="text" id="optionC_1" name="optionC_1"><br>
+                <label for="optionD_1">Option D:</label><br>
+                <input type="text" id="optionD_1" name="optionD_1"><br>
+                <label for="answer_1">Answer:</label><br>
+                <input type="text" id="answer_1" name="answer_1"><br><br>
+                <!-- 隐藏字段，记录题目数量 -->
+                <input type="hidden" name="numQuestions" value="1">
+            </div>
+        </div>
+
+        <!-- 添加题目按钮 -->
+        <button type="button" onclick="addQuestion()">Add Question</button><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- JavaScript 用于动态添加题目输入框 -->
+    <script>
+        var questionNumber = 1;
+
+        function addQuestion() {
+            questionNumber++;
+            var questionsDiv = document.getElementById('questions');
+
+            var questionDiv = document.createElement('div');
+            questionDiv.id = 'question_' + questionNumber;
+
+            questionDiv.innerHTML = `
+                <label for="question_${questionNumber}">Question ${questionNumber}:</label><br>
+                <input type="text" id="question_${questionNumber}" name="question_${questionNumber}"><br>
+                <label for="optionA_${questionNumber}">Option A:</label><br>
+                <input type="text" id="optionA_${questionNumber}" name="optionA_${questionNumber}"><br>
+                <label for="optionB_${questionNumber}">Option B:</label><br>
+                <input type="text" id="optionB_${questionNumber}" name="optionB_${questionNumber}"><br>
+                <label for="optionC_${questionNumber}">Option C:</label><br>
+                <input type="text" id="optionC_${questionNumber}" name="optionC_${questionNumber}"><br>
+                <label for="optionD_${questionNumber}">Option D:</label><br>
+                <input type="text" id="optionD_${questionNumber}" name="optionD_${questionNumber}"><br>
+                <label for="answer_${questionNumber}">Answer:</label><br>
+                <input type="text" id="answer_${questionNumber}" name="answer_${questionNumber}"><br><br>
+                <!-- 隐藏字段，记录题目数量 -->
+                <input type="hidden" name="numQuestions" value="${questionNumber}">
+            `;
+
+            questionsDiv.appendChild(questionDiv);
+        }
+    </script>
+</body>
+</html>
