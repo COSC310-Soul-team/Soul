@@ -244,6 +244,36 @@ def create_quiz():
 
 
 
+
+@app.route("/courses",methods=['GET','POST'])
+def courses():
+    # g.user=
+    courseList=cur.execute("SELECT * FROM courses").fetchall()
+    # courseList='\n'.join(courseList)
+    # courseList=list(courseList.split(" "))
+    # print(courseList[0])
+    courseNames=cur.execute("SELECT courseName FROM courses").fetchall()
+    studentInput=request.form.get("student_input",None)
+    print(studentInput)
+    for name in courseNames:
+        print(name[0])
+        if name[0]==studentInput:
+            data=(g.user[0],1,name[0])            
+            try:
+                lock.acquire(True)
+                cur.execute("INSERT INTO application VALUES(?,?)",data)
+                con.commit()
+            finally:
+                lock.release()
+            return render_template('courses.html',status="sent application",courseList=courseList)
+    return render_template('courses.html',courseList=courseList)
+
+
+
+
+
+
+
 # upload file
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Courses</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <!--===============================================================================================-->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+        }
+
+        .content {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .form-container {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .apply-button {
+            margin-top: 20px;
+        }
+    </style>
+    <!--===============================================================================================-->
+</head>
+
+<body>
+
+    <div class="header">
+        Courses
+    </div>
+
+    <div class="menu">
+        <a href="#" onclick="goBack()">Back</a>
+    </div>
+
+    <div class="content">
+        <div class="form-container">
+            <div class="input-description">
+                <p>All courses:</p>
+            </div>
+            <form class="course-form" method="post" action="#">
+                <select class="courses" name="courses">
+                    <!-- Option elements will be populated dynamically from backend -->
+                </select>
+                <input type="text" name="student_input" placeholder="Enter course code">
+                <div class="apply-button">
+                    <button type="submit">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--===============================================================================================-->
+    <script>
+        // JavaScript function to navigate back
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <!--===============================================================================================-->
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .sidebar {
+        position: fixed;
+        background-color: #f0f0f0;
+        padding: 40px;
+        width: 190px;
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-content, .sign-out-container {
+        flex-grow: 1;
+    }
+    .sidebar-content h2, .sign-out-container a {
+        margin-left: 10px;
+    }
+    .Teacher-info {
+        margin-top: 10px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 50px;
+    }
+    .sidebar a, .sign-out {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        margin-bottom: 10px;
+    }
+    .sidebar a:hover, .sign-out:hover {
+        background-color: #ddd;
+    }
+    .sign-out {
+        color: #333;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .sign-out:hover {
+        color: red;
+        border-color: red;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    .Teacher-info h3, .Teacher-info p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+    }
+    .main-content {
+        margin-left: 310px;
+        flex-grow: 1;
+        padding: 30px;
+        overflow-y: auto;
+        height: 100vh;
+    }
+    .course {
+        background-color: #e7e7e7;
+        margin: 10px 0;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 700px;
+    }
+    .course-link {
+        text-decoration: none;
+        color: black;
+    }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h2>Dashboard</h2>
+        <a href="#">Home</a>
+        <a href="#">Assignments</a>
+        <a href="#">Discussion</a>
+    </div>
+    <div class="Teacher-info">
+        <h3>Teacher Info</h3>
+        <p>Name Name</p>
+        <p>123456789</p>
+    </div>
+    <!-- Sign Out Button -->
+    <div class="sign-out-container">
+        <a class="sign-out" href="sign-out-page.html">Sign Out</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <h1>Courses</h1>
+    <!-- Wrapped course blocks in anchor tags for redirection -->
+    <a href="course-details-cosc310.html" class="course-link">
+        <div class="course">
+            <h2>COSC 310</h2>
+            <p>2023W2 Software Engineering</p>
+        </div>
+    </a>
+    <a href="course-details-cosc310.html" class="course-link">
+        <div class="course">
+            <h2>COSC 310</h2>
+            <p>2023W2 Software Engineering</p>
+        </div>
+    </a>
+    <!-- Repeat for each course with specific course detail page links -->
+</div>
+
+</body>
+</html>
+
+

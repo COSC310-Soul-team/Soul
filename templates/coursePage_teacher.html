@@ -89,3 +89,94 @@
     
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coursePage_teacher</title>
+    <script>
+        function createAssignment() {
+            // 弹出模态框
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+        }
+
+        function closeAssignmentModal() {
+            // 关闭模态框
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        function createAssignmentAndReturn() {
+            // 创建任务并返回到 coursePage_teacher 页面
+            var assignmentName = document.getElementById("assignment_name").value;
+            alert("Assignment Created: " + assignmentName);
+
+            // 返回到 coursePage_teacher 页面
+            window.location.href = "coursePage_teacher";
+        }
+    </script>
+    <style>
+        /* 样式用于模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <h1>coursePage_teacher</h1>
+    <button onclick="createAssignment()">Create Assignment</button>
+
+    <!-- 模态框 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+
+
+            <span onclick="closeAssignmentModal()" style="float: right; cursor: pointer;">&times;</span>
+            <h2>Create Assignment</h2>
+
+            <div align="center">
+                <form method="post" action="/coursePage_teacher" enctype="multipart/form-data">
+                    <br><br><br>
+                    <input type="file" name="file" accept=".txt, .pdf, .doc, .docx, .md" value="{{ csrf_token }}" />
+                    <br><br><br>
+                    <label for="assignment_name">Assignment Name:</label>
+                    <input type="text" id="assignment_name" name="assignment_name"><br><br>
+                    <input type="submit" value="submit" />
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div align="center">
+        <h1>download file</h1><br><br>
+        {% for n in name %}
+
+            <a href="coursePage_teacher/{{ n }}">{{ n }}</a>
+            <br><br>
+
+        {% endfor %}
+    </div>
+
+    
+</body>
+</html>
