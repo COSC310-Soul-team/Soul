@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            padding: 20px;
+            border-top: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Quiz</h1>
+        <form method="POST">
+            <label for="quizName">Quiz Name:</label>
+            <input type="text" id="quizName" name="quizName">
+
+            <!-- 注意：course 默认为 NULL -->
+            <input type="hidden" id="course" name="course" value="NULL">
+
+            <!-- 题目输入框 -->
+            <div id="questions">
+                <!-- 初始显示一个题目输入框 -->
+                <div id="question_1">
+                    <label for="question_1">Question 1:</label>
+                    <input type="text" id="question_1" name="question_1">
+                    <label for="optionA_1">Option A:</label>
+                    <input type="text" id="optionA_1" name="optionA_1">
+                    <label for="optionB_1">Option B:</label>
+                    <input type="text" id="optionB_1" name="optionB_1">
+                    <label for="optionC_1">Option C:</label>
+                    <input type="text" id="optionC_1" name="optionC_1">
+                    <label for="optionD_1">Option D:</label>
+                    <input type="text" id="optionD_1" name="optionD_1">
+                    <label for="answer_1">Answer:</label>
+                    <input type="text" id="answer_1" name="answer_1">
+                    <!-- 隐藏字段，记录题目数量 -->
+                    <input type="hidden" name="numQuestions" value="1">
+                </div>
+            </div>
+
+            <!-- 添加题目按钮 -->
+            <button type="button" onclick="addQuestion()">Add Question</button>
+
+            <br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <!-- JavaScript 用于动态添加题目输入框 -->
+    <script>
+        var questionNumber = 1;
+
+        function addQuestion() {
+            questionNumber++;
+            var questionsDiv = document.getElementById('questions');
+
+            var questionDiv = document.createElement('div');
+            questionDiv.id = 'question_' + questionNumber;
+
+            questionDiv.innerHTML = `
+                <label for="question_${questionNumber}">Question ${questionNumber}:</label>
+                <input type="text" id="question_${questionNumber}" name="question_${questionNumber}">
+                <label for="optionA_${questionNumber}">Option A:</label>
+                <input type="text" id="optionA_${questionNumber}" name="optionA_${questionNumber}">
+                <label for="optionB_${questionNumber}">Option B:</label><br>
+                <input type="text" id="optionB_${questionNumber}" name="optionB_${questionNumber}"><br>
+                <label for="optionC_${questionNumber}">Option C:</label><br>
+                <input type="text" id="optionC_${questionNumber}" name="optionC_${questionNumber}"><br>
+                <label for="optionD_${questionNumber}">Option D:</label><br>
+                <input type="text" id="optionD_${questionNumber}" name="optionD_${questionNumber}"><br>
+                <label for="answer_${questionNumber}">Answer:</label><br>
+                <input type="text" id="answer_${questionNumber}" name="answer_${questionNumber}"><br><br>
+                <!-- 隐藏字段，记录题目数量 -->
+                <input type="hidden" name="numQuestions" value="${questionNumber}">
+            `;
+
+            questionsDiv.appendChild(questionDiv);
+        }
+    </script>
+</body>
+</html>
