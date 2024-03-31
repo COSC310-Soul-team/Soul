@@ -1,5 +1,9 @@
 name: Auto Label Issues by Assignee
 
+permissions:
+  issues: write
+  pull-requests: write
+
 on:
   issues:
     types: [assigned]
@@ -9,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Label issue based on assignee
-        uses: actions/github-script@v6
+        uses: actions/github-script@v20
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
