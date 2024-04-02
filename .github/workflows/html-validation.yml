@@ -1,34 +1,47 @@
-name: HTML Validation
+name: Validate HTML
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - '**.html'
   pull_request:
-    branches:
-      - main
+    paths:
+      - '**.html'
 
 jobs:
-  validate:
+  validate-html:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          node-version: '14'
-      
-      - name: Install HTML Validator
-        run: npm install -g html-validator-cli
-      
-      - name: Validate HTML files
+          python-version: '3.x'
+
+      - name: Install Dependencies
         run: |
-          for file in *.html; do
-            if [ -f "$file" ]; then
-              echo "Validating $file"
-              html-validator --file="$file" --verbose
+          python -m pip install --upgrade pip
+          pip install html5validator
+
+      - name: List all modified and added HTML files
+        id: file-filter
+        run: |
+          echo "::set-output name=html_files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.html$' | xargs)"
+        shell: bash
+
+      - name: Validate HTML files
+        if: steps.file-filter.outputs.html_files != ''
+        run: |
+          FILES=${{ steps.file-filter.outputs.html_files }}
+          for FILE in $FILES; do
+            echo "Validating $FILE"
+            html5validator --match "$FILE"
+            if [ $? -ne 0 ]; then
+              echo "::error::HTML validation failed for $FILE"
+              exit 1
             fi
           done
+        shell: bash
