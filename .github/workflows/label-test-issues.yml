@@ -1,11 +1,17 @@
 name: Label Test Issues
 
+permissions:
+    issues: write
+    contents: read
+
 on:
   issues:
-    types: [opened, edited]
+    types:
+        - reopened
+        - opened
 
 jobs:
-  label:
+  auto-label:
     runs-on: ubuntu-latest
     steps:
       - name: Label issue with 'test'
