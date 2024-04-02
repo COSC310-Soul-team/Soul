@@ -1,5 +1,8 @@
 name: Unlabel Issue on Close
 
+permissions:
+    issues: write
+
 on:
   issues:
     types: 
