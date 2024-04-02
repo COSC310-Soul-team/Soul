@@ -21,8 +21,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install html5validator
-        run: pip install html5validator
+      - name: Install dependencies
+        run: pip install requests
 
-      - name: Validate HTML files
-        run: html5validator --root . --ignore 'Attribute “.*” not allowed on element “.*” at this point.'
+      - name: Validate HTML files with W3C Validator
+        run: python auto_test/validate_html.py
