@@ -26,5 +26,12 @@ jobs:
                              "https://validator.w3.org/nu/?out=json")
             echo "Validation Results for $FILE:"
             echo $RESPONSE | jq '.'
+
+            # Check if there are any errors
+            if [ $(echo $RESPONSE | jq '.messages | map(select(.type == "error")) | length') -gt 0 ]; then
+              echo "Validation found errors in $FILE"
+              exit 1
+            fi
           done
         shell: bash
+
