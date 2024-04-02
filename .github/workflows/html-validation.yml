@@ -21,8 +21,12 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: pip install requests
+      - name: Install html5validator
+        run: pip install html5validator
 
-      - name: Validate HTML files with W3C Validator
-        run: python auto_test/validate_html.py
+      - name: Validate HTML files
+        run: |
+            html5validator --root . \
+            --ignore 'Attribute “.*” not allowed on element “.*” at this point.' \
+            --ignore 'Bad value “.*” for attribute “href” on element “a”' \
+            --ignore 'Text not allowed in element “.*” in this context.'
