@@ -25,4 +25,10 @@ jobs:
         run: npm install -g html-validator-cli
       
       - name: Validate HTML files
-        run: html-validator --input '*.html'
+        run: |
+          for file in *.html; do
+            if [ -f "$file" ]; then
+              echo "Validating $file"
+              html-validator --file="$file" --verbose
+            fi
+          done
