@@ -1,0 +1,30 @@
+name: W3C HTML Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-html:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Validate HTML files
+        run: |
+          FILES=$(find . -name '*.html' -print)
+          for FILE in $FILES; do
+            echo "Validating $FILE"
+            RESPONSE=$(curl -s -H "Content-Type: text/html; charset=utf-8" \
+                             --data-binary @$FILE \
+                             "https://validator.w3.org/nu/?out=json")
+            echo "Validation Results for $FILE:"
+            echo $RESPONSE | jq '.'
+          done
+        shell: bash
