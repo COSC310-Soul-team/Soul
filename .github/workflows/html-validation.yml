@@ -1,32 +1,28 @@
-name: HTML Validation and Testing
+name: HTML Validation
 
 on:
   push:
-    paths:
-      - '**/*.html'
+    branches:
+      - main
   pull_request:
-    paths:
-      - '**/*.html'
+    branches:
+      - main
 
 jobs:
-  validate-html:
+  validate:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
+      - name: Check out code
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          python-version: '3.x'
-
-      - name: Install html5validator
-        run: pip install html5validator
-
+          node-version: '14'
+      
+      - name: Install HTML Validator
+        run: npm install -g html-validator-cli
+      
       - name: Validate HTML files
-        run: |
-            html5validator --root . \
-            --ignore 'Attribute “.*” not allowed on element “.*” at this point.' \
-            --ignore 'Bad value “.*” for attribute “href” on element “a”' \
-            --ignore 'Text not allowed in element “.*” in this context.'
+        run: html-validator --input '*.html'
