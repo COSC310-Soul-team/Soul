@@ -2,8 +2,8 @@ name: HTML Syntax Checker
 
 on:
   push:
-    paths:
-      - '**/*.html'
+    branches:
+    - 'main'
 
 jobs:
   validate-html:
