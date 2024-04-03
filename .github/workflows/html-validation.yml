@@ -15,7 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
       
       - name: Install html5validator
         run: pip install html5validator
@@ -23,17 +22,16 @@ jobs:
       - name: Find Modified HTML Files
         id: modified_files
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ github.base_ref }}...${{ github.sha }} | grep '\.html$')
+          git fetch origin main:main  # Adjust 'main' if your default branch differs
+          CHANGED_FILES=$(git diff --name-only main...HEAD | grep '\.html$')
           echo "::set-output name=modified_html_files::$CHANGED_FILES"
-
+      
       - name: Validate Modified HTML Files
         run: |
           MODIFIED_HTML_FILES="${{ steps.modified_files.outputs.modified_html_files }}"
-          if [ -z "$MODIFIED_HTML_FILES" ]; then
-            echo "No HTML files have been modified."
+          if [ -n "$MODIFIED_HTML_FILES" ]; then
+            html5validator $MODIFIED_HTML_FILES
           else
-            echo "Validating the following HTML files:"
-            echo $MODIFIED_HTML_FILES
-            # Run your validation command here, e.g., html5validator
-            echo "Replace this line with your validation command."
+            echo "No HTML files have been modified."
           fi
+
