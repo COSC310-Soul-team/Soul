@@ -12,6 +12,9 @@ jobs:
   validate-html:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: HTML5 Validator
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
