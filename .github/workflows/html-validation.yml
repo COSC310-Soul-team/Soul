@@ -2,8 +2,11 @@ name: HTML Syntax Checker
 
 on:
   push:
-    branches:
-    - 'main'
+    paths:
+      - '**/*.html'
+  pull_request:
+    paths:
+      - '**/*.html'
 
 jobs:
   validate-html:
@@ -11,10 +14,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - name: Install html5validator
+        run: pip install html5validator
+      
+      - name: Find Modified HTML Files
+        id: modified_files
+        run: |
+          git fetch origin main:main  # Adjust 'main' if your default branch differs
+          CHANGED_FILES=$(git diff --name-only main...HEAD | grep '\.html$')
+          echo "::set-output name=modified_html_files::$CHANGED_FILES"
+      
+      - name: Validate Modified HTML Files
+        run: |
+          MODIFIED_HTML_FILES="${{ steps.modified_files.outputs.modified_html_files }}"
+          if [ -n "$MODIFIED_HTML_FILES" ]; then
+            html5validator $MODIFIED_HTML_FILES
+          else
+            echo "No HTML files have been modified."
+          fi
 
-      - name: HTML5 Validator
-        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
-        with:
-          root: .
-          blacklist: invalid
-          skip_git_check: true
