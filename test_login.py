@@ -1,7 +1,6 @@
 
 import unittest
-from flask_testing import TestCase
-from flask import Flask
+from app import app
 
 class TestLogin(TestCase):
 
