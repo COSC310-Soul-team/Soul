@@ -14,8 +14,10 @@ jobs:
       with:
         python-version: '3.8' 
 
-    - name: Install Flask
-      run: pip install Flask 
+    - name: Install dependencies
+      run: |
+        pip install Flask
+        pip install selenium
 
     - name: Run Python test script
       run: python test_login.py
