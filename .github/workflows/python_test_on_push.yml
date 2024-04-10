@@ -19,7 +19,7 @@ jobs:
 
     - name: Run Python script
       run: python test_login.py
-          python tes_signup_auto.py
-          python test_createQuiz_auto.py
-          python test_login_auto.py
-          python test_quizPage_student_auto.py
+          python 'auto_test/tes_signup_auto.py'
+          python 'auto_test/test_createQuiz_auto.py'
+          python 'auto_test/test_login_auto.py'
+          python 'auto_test/test_quizPage_student_auto.py'
