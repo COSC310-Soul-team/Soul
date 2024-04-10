@@ -27,6 +27,8 @@ jobs:
         pip install Flask
         pip install selenium
 
-    - name: Run Python test script
-      run: python test_login.py
-
+    - name: Run Python scripts in auto_test folder
+      run: |
+        for file in auto_test/*.py; do
+          python "$file"
+        done
