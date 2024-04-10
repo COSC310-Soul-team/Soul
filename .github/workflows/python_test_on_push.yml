@@ -17,9 +17,11 @@ jobs:
     - name: Install Flask
       run: pip install Flask 
 
-    - name: Run Python script
+    - name: Run Python test script
       run: python test_login.py
-          python 'auto_test/tes_signup_auto.py'
-          python 'auto_test/test_createQuiz_auto.py'
-          python 'auto_test/test_login_auto.py'
-          python 'auto_test/test_quizPage_student_auto.py'
+
+    - name: Run Python scripts in auto_test folder
+      run: |
+        for file in auto_test/*.py; do
+          python "$file"
+        done
