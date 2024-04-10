@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Assignments</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .sidebar {
+        position: fixed;
+        background-color: #f0f0f0;
+        padding: 40px;
+        width: 190px;
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-content, .sign-out-container {
+        flex-grow: 1;
+    }
+    .sidebar-content h2, .sign-out-container a {
+        margin-left: 10px;
+    }
+    .teacher-info {
+        margin-top: 10px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 50px;
+    }
+    .sidebar a, .sign-out {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        margin-bottom: 10px;
+    }
+    .sidebar a:hover, .sign-out:hover {
+        background-color: #ddd;
+    }
+    .sign-out {
+        color: #333;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .sign-out:hover {
+        color: red;
+        border-color: red;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    .teacher-info h3, .teacher-info p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+    }
+    .main-content {
+        margin-left: 310px;
+        flex-grow: 1;
+        padding: 30px;
+        overflow-y: auto;
+        height: 100vh;
+    }
+    .main-content .course-title {
+        font-size: 28px; /* 比已有标题稍大 */
+    }
+    .main-content h1 {
+        font-size: 24px;
+    }
+    .assignment {
+    display: flex;
+    justify-content: space-between; /* 对齐到两端 */
+    background-color: #e7e7e7;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 700px;
+    }
+
+    .extra-details {
+        display: flex;
+        align-items: center; /* 垂直居中 */
+    }
+
+    .course-name, .score {
+        margin-left: 10px; /* 添加间距 */
+    }
+
+
+    .assignment-link {
+        text-decoration: none;
+        color: black;
+    }
+    .assignment h2 {
+        font-size: 18px; /* Decreased font size */
+        margin-bottom: 5px; /* Adjusted margin */
+    }
+    .add-assignment-btn {
+        display: inline-block;
+        padding: 10px 15px;
+        text-decoration: none;
+        background-color: transparent;
+        color: black;
+        border: 2px solid black;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px; /* 稍微减小字号 */
+        transition: background-color 0.3s, color 0.3s;
+        margin-bottom: 10px; /* 与Assignments标题平行 */
+    }
+
+    .add-assignment-btn:hover {
+        background-color: black;
+        color: white;
+    }
+
+    .back-button {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #5bc0de; /* 淡蓝色 */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    .back-button a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .back-button:hover {
+        background-color: #46b8da; /* 深一点的淡蓝色 */
+    }
+    
+    
+</style>
+</head>
+<body>
+
+<!-- Sidebar Content -->
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h2>Dashboard</h2>
+        <a href="teacherHomePage">Home</a>
+        <a href="discussions">Discussion</a>
+    </div>
+    <div class="teacher-info">
+        <h3>Teacher Info</h3>
+        <p>{{ g.user[1] }}</p>
+        <p>{{ g.user[0] }}</p>
+    </div>
+    <!-- Sign Out Button -->
+    <div class="sign-out-container">
+        <a class="sign-out" href="/login">Sign Out</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Submission Section -->
+    <h1 class="course-title">{{assignmentName}}</h1>
+    <div class="submission-section">
+        {% for i in range(length) %}
+        <div class="assignment">
+            <a href="{{ url_for('download_file', filename=submissionList[i]) }}">{{ submissionList[i] }}</a>
+            <p>{{gradeList[i]}}</p>
+            <a href="{{ url_for('TeacherGrade', type=submissionList[i]) }}">grading</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="back-button">
+    <a href="{{ url_for('coursePage_teacher', type=session['selectedCourse']) }}">Back to Course Page</a>
+</div>
+</body>
+</html>

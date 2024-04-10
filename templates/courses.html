@@ -5,11 +5,8 @@
     <title>Courses</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <!--===============================================================================================-->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,22 +35,59 @@
         .form-container {
             display: inline-block;
             text-align: left;
+            margin-top: 20px;
         }
 
         .apply-button {
             margin-top: 20px;
+            text-align: center;
         }
-        
+
         .course-list {
             list-style-type: none;
             padding: 0;
+            margin: 0 auto;
+            max-width: 300px;
+            text-align: left;
         }
 
         .course-item {
             margin-bottom: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .course-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .course-form input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .course-form button[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .course-form button[type="submit"]:hover {
+            background-color: #0056b3;
         }
     </style>
-    <!--===============================================================================================-->
 </head>
 
 <body>
@@ -71,11 +105,13 @@
             <div class="input-description">
                 <p>All courses:</p>
             </div>
-            {% for course in courseList %}
-                <div>{{course}}</div>
-            {% endfor %}
-            <div>
-                Status: {{status}}
+            <ul class="course-list">
+                {% for course in courseList %}
+                    <li class="course-item">{{ course }}</li>
+                {% endfor %}
+            </ul>
+            <div class="status-message">
+                Status: {{ status }}
             </div>
             <form class="course-form" method="post" action="#">
                 <input type="text" name="student_input" placeholder="Enter course code">
@@ -86,14 +122,11 @@
         </div>
     </div>
 
-    <!--===============================================================================================-->
     <script>
-        // JavaScript function to navigate back
         function goBack() {
             window.history.back();
         }
     </script>
-    <!--===============================================================================================-->
 </body>
 
 </html>

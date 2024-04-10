@@ -1,2 +1,6 @@
 Flask==2.0.1
+<<<<<<< Updated upstream
 Werkzeug>=2.0
+=======
+# Add other dependencies here
+>>>>>>> Stashed changes

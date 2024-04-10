@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Assignments</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .sidebar {
+        position: fixed;
+        background-color: #f0f0f0;
+        padding: 40px;
+        width: 190px;
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-content, .sign-out-container {
+        flex-grow: 1;
+    }
+    .sidebar-content h2, .sign-out-container a {
+        margin-left: 10px;
+    }
+    .teacher-info {
+        margin-top: 10px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 50px;
+    }
+    .sidebar a, .sign-out {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        margin-bottom: 10px;
+    }
+    .sidebar a:hover, .sign-out:hover {
+        background-color: #ddd;
+    }
+    .sign-out {
+        color: #333;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .sign-out:hover {
+        color: red;
+        border-color: red;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    .teacher-info h3, .teacher-info p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+    }
+    .main-content {
+        margin-left: 310px;
+        flex-grow: 1;
+        padding: 30px;
+        overflow-y: auto;
+        height: 100vh;
+    }
+    /* Updated styles for the discussion form */
+    .discussion-form {
+        background-color: #e7e7e7;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 700px;
+    }
+    .discussion-form label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .discussion-form input[type="text"], .discussion-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 20px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .discussion-form input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .discussion-form input[type=submit]:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+
+<!-- Sidebar Content -->
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h2>Dashboard</h2>
+        
+        {% if g.user[0]//1000 == 3 %}
+            <a href="studentHomePage">Home</a>
+        {% else %}
+            <a href="teacherHomePage">Home</a>
+        {% endif %}
+
+        {% if g.user[0]//1000 == 3 %}
+            <a href="courses">Browse courses</a>
+        {% endif %}
+        <a href="discussions">Discussion</a>
+    </div>
+    <div class="teacher-info">
+        {% if g.user[0]//1000 == 3 %}
+            <h3>Student Info</h3>
+        {% else %}
+            <h3>Teacher Info</h3>
+        {% endif %}
+        <p>{{ g.user[1] }}</p>
+        <p>{{ g.user[0] }}</p>
+    </div>
+    <!-- Sign Out Button -->
+    <div class="sign-out-container">
+        <a class="sign-out" href="/login">Sign Out</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <form class="discussion-form" method="post">
+        <h1>New Discussion</h1>
+        <label for="discussionTitle">Title:</label>
+        <input type="text" id="discussionTitle" name="discussionName" placeholder="Enter Title">
+
+        <label for="discussionContent">Content:</label>
+        <textarea id="discussionContent" name="discussionContent" placeholder="Enter your discussion..." style="height:200px"></textarea>
+
+        <input type="submit" value="Submit discussion">
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!--
+    this page is after the teacher downlaod assignments page
+    after teachers click on an assignment a student handed in,  
+    they are able to see the course name of this assignment, the assignment title, student's name, and their student ID
+    they can enter a grade and leave a comment then click on the submit button
+-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade Assignments</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .sidebar {
+        position: fixed;
+        background-color: #f0f0f0;
+        padding: 40px;
+        width: 190px;
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-content, .sign-out-container {
+        flex-grow: 1;
+    }
+    .sidebar-content h2, .sign-out-container a {
+        margin-left: 10px;
+    }
+    .Teacher-info {
+        margin-top: 10px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 50px;
+    }
+    .sidebar a, .sign-out {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        margin-bottom: 10px;
+    }
+    .sidebar a:hover, .sign-out:hover {
+        background-color: #ddd;
+    }
+    .sign-out {
+        color: #333;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .sign-out:hover {
+        color: red;
+        border-color: red;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    .Teacher-info h3, .Teacher-info p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+    }
+    .main-content {
+        margin-left: 310px;
+        flex-grow: 1;
+        padding: 30px;
+        overflow-y: auto;
+        height: 100vh;
+    }
+    .grade-form {
+        background-color: #e7e7e7;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 700px;
+    }
+    .grade-form h2 {
+        margin-top: 0;
+    }
+    .grade-form label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .grade-form input[type="text"], .grade-form textarea, .grade-form p {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 20px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .grade-form p {
+        padding: 10px 0; /* Adjusts padding for the paragraph to align with input fields */
+    }
+    .grade-form input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .grade-form input[type=submit]:hover {
+        background-color: #45a049;
+    }
+
+    .back-button {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #5bc0de; /* 淡蓝色 */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    .back-button a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .back-button:hover {
+        background-color: #46b8da; /* 深一点的淡蓝色 */
+    }
+
+    .flash-message-container {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+    }
+    
+    .flash-message {
+        padding: 10px 20px;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: bold;
+        margin-bottom: 10px;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+    
+    .flash-message.success {
+        background-color: #28a745;
+    }
+    
+    .flash-message.error {
+        background-color: #dc3545;
+    }
+
+    
+</style>
+</head>
+
+
+
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h2>Dashboard</h2>
+        <a href="#">Home</a>
+        <a href="#">Assignments</a>
+        <a href="#">Discussion</a>
+    </div>
+    <div class="Teacher-info">
+        <h3>Teacher Info</h3>
+        <p>Name Name</p>
+        <p>123456789</p>
+    </div>
+    <div class="sign-out-container">
+        <a class="sign-out" href="sign-out-page.html">Sign Out</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <h1>Grade Assignment</h1>
+    <form class="grade-form" method='POST'>
+        <h2>Assignment Details</h2>
+        <!-- Dynamically replace these placeholders with server-side or client-side generated content -->
+        <p><strong>Course Name:</strong> <span id="course-name">{{courseName}}</span></p>
+        <p><strong>Assignment Title:</strong> <span id="assignment-title">{{assignmentName}}</span></p>
+        <p><strong>Student Name:</strong> <span id="student-name">{{studentName}}</span></p>
+        <p><strong>Student ID:</strong> <span id="student-id">{{studentId}}</span></p>
+
+        <label for="grade">Grade:</label>
+        <input type="text" id="grade" name="grade" placeholder="Enter Grade">
+
+       
+        <input type="submit" value="Submit Grade">
+    </form>
+</div>
+
+    <div class="back-button">
+        <a href="{{ url_for('assignmentPage_teacher', type=session['selectedAssignment']) }}">Back to assignment Page</a>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-message-container">
+                <div id="flash-message" class="flash-message {{ category }}">{{ message }}</div>
+            </div>
+            <script>
+                // 自动隐藏消息
+                setTimeout(function() {
+                    var flashMessage = document.getElementById('flash-message');
+                    if (flashMessage) {
+                        flashMessage.style.opacity = '0';
+                        setTimeout(function() {
+                            flashMessage.style.display = 'none';
+                        }, 300); // 延迟隐藏动画时间
+                    }
+                }, 3000); // 3秒后隐藏
+            </script>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    </head>
+    <body>
+    
+    <pre id="response"></pre> <!-- This is where the response will be displayed -->
+    
+    </body>
+    </html>

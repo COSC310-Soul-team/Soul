@@ -7,11 +7,13 @@ cur.execute("DROP TABLE application")
 cur.execute("DROP TABLE courses")
 cur.execute("DROP TABLE assignment")
 cur.execute("DROP TABLE quiz")
+cur.execute("DROP TABLE grades")
+cur.execute("DROP TABLE discussions")
 cur.execute("CREATE TABLE courses(courseName,instructor)")
 cur.execute("CREATE TABLE application(studentId,courseName)")
 cur.execute("CREATE TABLE users(id,name,password,courses)")
 cur.execute("CREATE TABLE grades(courseName,assignment,studentId,grade)")
-cur.execute("CREATE TABLE assignment(assignmentName,courseName)")
+cur.execute("CREATE TABLE assignment(assignmentName,courseName,assignmentFullMark)")
 cur.execute('''CREATE TABLE quiz (
                QuizName TEXT,
                Course TEXT,
@@ -22,4 +24,5 @@ cur.execute('''CREATE TABLE quiz (
                OptionC TEXT,
                OptionD TEXT,
                Answer TEXT)''')
+cur.execute("CREATE TABLE discussions(discussionName,content,reply)")
 con.commit() 
