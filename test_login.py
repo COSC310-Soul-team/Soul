@@ -2,7 +2,7 @@
 import unittest
 from app import app
 
-class TestLogin(TestCase):
+class TestLogin(unittest.TestCase):
 
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     TESTING = True
