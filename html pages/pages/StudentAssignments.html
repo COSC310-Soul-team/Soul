@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Assignments</title>
-
+<title>Student Dashboard</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -72,12 +71,6 @@
         overflow-y: auto;
         height: 100vh;
     }
-    .main-content .course-title {
-        font-size: 28px; /* 比已有标题稍大 */
-    }
-    .main-content h1 {
-        font-size: 24px;
-    }
     .assignment {
     display: flex;
     justify-content: space-between; /* 对齐到两端 */
@@ -86,7 +79,7 @@
     padding: 10px;
     border-radius: 8px;
     max-width: 700px;
-    }
+}
 
     .extra-details {
         display: flex;
@@ -110,7 +103,6 @@
 </head>
 <body>
 
-<!-- Sidebar Content -->
 <div class="sidebar">
     <div class="sidebar-content">
         <h2>Dashboard</h2>
@@ -121,8 +113,8 @@
     </div>
     <div class="student-info">
         <h3>Student Info</h3>
-        <p>{{g.user[1]}}</p>
-        <p>{{g.user[0]}}</p>
+        <p>Name Name</p>
+        <p>123456789</p>
     </div>
     <!-- Sign Out Button -->
     <div class="sign-out-container">
@@ -130,105 +122,31 @@
     </div>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
-    <h1 class="course-title"> 
     <h1>Assignments</h1>
-    <div id="assignments-section">
-        <!-- Template for assignments -->
-        <template id="assignment-template">
-            <a href="download" class="assignment-link">
-                <div class="assignment">
-                    <h2></h2>
-                    <p></p>
-                    <div class="extra-details">
-                        <p class="score"></p>
-                    </div>
-                </div>
-            </a>
-        </template>
-    </div>
-
-    <h1>Quizzes</h1>
-    <div id="quizzes-section">
-        <!-- Template for quizzes (same as assignments) -->
-        <template id="quiz-template">
-            <a href="quizzes" class="assignment-link">
-                <div class="assignment">
-                    <h2></h2>
-                    <p></p>
-                    <div class="extra-details">
-                        <p class="score"></p>
-                    </div>
-                </div>
-            </a>
-        </template>
-    </div>
+    <!-- Wrapped assignment blocks in anchor tags for redirection -->
+    <a href="download.html" class="assignment-link">
+        <div class="assignment">
+            <h2>Assignment 1</h2>
+            <p>Description of Assignment 1</p>
+            <div class="extra-details">
+                <p class="course-name">Course Name</p> <!-- Course name -->
+                <p class="score">Score: 90/100</p> <!-- Score -->
+            </div>
+        </div>
+    </a>
+    <a href="download.html" class="assignment-link">
+        <div class="assignment">
+            <h2>Assignment 2</h2>
+            <p>Description of Assignment 2</p>
+            <div class="extra-details">
+                <p class="course-name">Course Name</p> <!-- Course name -->
+                <p class="score">Score: 85/100</p> <!-- Score -->
+            </div>
+        </div>
+    </a>
+    <!-- Repeat for each assignment with specific assignment detail page links -->
 </div>
-
-<script src="mock.js"></script>
-<script>
-// Sample data for demonstration
-
-const courseTitleElement = document.querySelector('.course-title');
-
-courseTitleElement.textContent = "COSC 310";
-
-// Function to populate assignments
-function populateAssignments() {
-    const assignmentsSection = document.getElementById("assignments-section");
-    fetch('/api/assignments1') 
-        .then(response => response.json())
-        .then(assignments => {
-            assignments.forEach(assignment => {
-                const assignmentElement = document.createElement('div');
-                assignmentElement.classList.add('assignment');
-                assignmentElement.innerHTML = `
-                    <a href="download" class="assignment-link">
-                        <h2>${assignment.title}</h2>
-                        <div class="extra-details">
-                            <p class="score">Score: ${assignment.score}</p>
-                        </div>
-                    </a>
-                `;
-                assignmentsSection.appendChild(assignmentElement);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching assignments:', error);
-        });
-}
-
-// Function to populate quizzes
-function populateQuizzes() {
-    const quizzesSection = document.getElementById("quizzes-section");
-    fetch('/api/quizzes1') 
-        .then(response => response.json())
-        .then(quizzes => {
-            quizzes.forEach(quiz => {
-                const quizElement = document.createElement('div');
-                quizElement.classList.add('assignment');
-                quizElement.innerHTML = `
-                    <a href="quizzes" class="assignment-link">
-                        <h2>${quiz.title}</h2>
-                        <div class="extra-details">
-                            <p class="score">Score: ${quiz.score}</p>
-                        </div>
-                    </a>
-                `;
-                quizzesSection.appendChild(quizElement);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching quizzes:', error);
-        });
-}
-
-// Call functions to populate sections
-populateAssignments();
-populateQuizzes();
-</script>
-
 
 </body>
 </html>
