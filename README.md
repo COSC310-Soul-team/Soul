@@ -1,1 +1,1 @@
-# Discord-clone
+# E-learning platform
