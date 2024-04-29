@@ -17,16 +17,15 @@ con = sqlite3.connect("tutorial.db",check_same_thread=False)
 cur = con.cursor()
 id=0
 lock = threading.Lock()
-# cur.execute("CREATE TABLE users(id, name, password)")
-# res=cur.execute("INSERT INTO users VALUES (2,'xu',333)")
-# con.commit()
 
 
 app = Flask(__name__, static_url_path="/")
 app.config['SECRET_KEY'] = "sdfklas0lk42j"
 
-#文件路径
-app.config['UPLOAD_FOLDER'] = r'C:\Users\Haozhe XU\Desktop\COSC310\server'
+#file path
+path1=r'C:\Users\Allen\OneDrive\桌面\Soul final\server'
+paraPath='C:/Users/Allen/OneDrive/桌面/Soul final/server'
+app.config['UPLOAD_FOLDER'] = path1
 file_dir = app.config['UPLOAD_FOLDER']
 
 
@@ -49,19 +48,23 @@ def login():
         session.pop('user_id', None) 
         username = request.form.get("username", None)
         password = request.form.get("password", None)
-        userId_input = request.form.get("userId", None)
+        userId_input = int(request.form.get("userId", None))
         
         try:
             lock.acquire(True)
-            user = cur.execute("SELECT * FROM users WHERE name=?", (username,)).fetchone()
+            user = cur.execute("SELECT * FROM users WHERE id=?", (userId_input,)).fetchone()
         finally:
             lock.release()
         
         if user is not None:
             dbUsername = user[1]
-            dbPassword = user[2]
+            dbPassword = int(user[2])
             userId = user[0]
-            if username == dbUsername and int(password) == int(dbPassword) and str(userId) == userId_input:
+            print(userId)
+            print(dbPassword)
+            print(dbUsername)
+            if username == dbUsername and int(password) == int(dbPassword) and userId == userId_input:
+                print(1)
                 if str(userId).startswith('3'):
                     session['user_id'] = userId
                     return redirect(url_for('studentHomePage'))
@@ -73,6 +76,45 @@ def login():
                     return redirect(url_for('teacherHomePage'))
     
     return render_template("login.html")
+
+
+
+
+
+
+
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+    if request.method == 'POST':
+        user_id = int(request.form['userId'])
+        password = str(request.form['password'])
+        new_user_name = request.form['newUserName']
+        new_password = request.form['newPassword']
+
+        # check if user exist
+        cur.execute("SELECT * FROM users WHERE id=? AND password=?", (user_id, password))
+        user = cur.fetchone()
+
+        print(user)
+        print(user_id)
+        print(password)
+        print(new_user_name)
+        print(new_password)
+
+        if user:
+            # update user info
+            cur.execute("UPDATE users SET name=?, password=? WHERE id=?", (new_user_name, new_password, user_id))
+            con.commit()
+            return redirect(url_for('login')) 
+        else:
+            # user not exist or wrong password
+            return "User ID or Password is incorrect. Please try again."
+
+    return render_template("profile.html")
+
+
+
+
 
 
 
@@ -108,7 +150,7 @@ def signup():
         finally:
             lock.release()
         
-        return render_template("signup_success.html", userId=userId)  # Show success page with user ID
+        return render_template("signup_success.html", userId=userId, userName=userName)  # Show success page with user ID
         
     return render_template("signup.html")
 
@@ -129,17 +171,16 @@ def coursePage_student():
     selectedCourse=request.args.get('type')
     session['selectedCourse']=selectedCourse
 
-
-    # 查询数据库以获取与selectedCourse匹配的条目
-    conn = sqlite3.connect("tutorial.db")
-    cur = conn.cursor()
+    # get items with selectedCourse
+    # conn = sqlite3.connect("tutorial.db")
+    # cur = conn.cursor()
     cur.execute("SELECT DISTINCT QuizName FROM quiz WHERE Course=?", (selectedCourse,))
     quiz_rows = cur.fetchall() 
-    conn.close()
-    # 创建一个quizList，仅包含唯一的QuizName
+    # conn.close()
+    # create a quizList，with unique QuizName
     quizList = [row[0] for row in quiz_rows]
 
-    assignmentList = os.listdir('C:/Users/Haozhe XU/Desktop/COSC310/server/%s'%selectedCourse)
+    assignmentList = cur.execute("SELECT * FROM assignment WHERE courseName=?",(selectedCourse,))
     return render_template('coursePage_student.html',
      assignmentList=assignmentList, quizList=quizList)
 
@@ -151,7 +192,7 @@ def download_file(filename):
     selectedCourse = session.get('selectedCourse')
     selectedAssignment=session['selectedAssignment']
 
-    assignment_path = os.path.join('C:/Users/Haozhe XU/Desktop/COSC310/server', selectedCourse, selectedAssignment)
+    assignment_path = os.path.join(paraPath, selectedCourse, selectedAssignment)
     return send_from_directory(assignment_path, filename, as_attachment=True)
 
 @app.route("/assignmentPage_student", methods=['GET', 'POST'])
@@ -159,21 +200,21 @@ def assignmentPage_student():
     selectedCourse = session.get('selectedCourse')
     selectedAssignment=request.args.get('type')
     session['selectedAssignment']=selectedAssignment
-    assignment_path = os.path.join('C:/Users/Haozhe XU/Desktop/COSC310/server', selectedCourse, selectedAssignment)
+    assignment_path = os.path.join(paraPath, selectedCourse, selectedAssignment)
 
     if not os.path.exists(assignment_path):
         return "Error: Assignment folder does not exist"
 
-    # 遍历指定路径下的所有文件
+    # travers all files in the directory
     file_list = [file_name for file_name in os.listdir(assignment_path) if file_name.startswith('2')]
     
-    # 查询成绩信息
+    # check grade
     grade = None
     
-    searchData = (selectedCourse, selectedAssignment, str(session['user_id']))
+    searchData = (selectedCourse, selectedAssignment, session['user_id'])
     print(session['user_id'])
     gradeData = cur.execute("SELECT grade FROM grades WHERE courseName=? AND assignment=? AND studentId=?", searchData).fetchone()
-    print(gradeData)
+    
     if gradeData:
         grade = gradeData[0]
 
@@ -187,24 +228,24 @@ def uploadAssignment():
     selectedAssignment = session.get('selectedAssignment')
 
     if request.method == 'POST':
-        # 检查是否存在文件在请求中
+        # check if file exist
         if 'file' not in request.files:
             flash('No file part', 'error')
             return redirect(request.url)
 
         file = request.files['file']
 
-        # 如果用户没有选择文件，浏览器也会发送一个空的文件名
+        # browser send null file name if user select no file
         if file.filename == '':
             flash('No selected file', 'error')
             return redirect(request.url)
 
         if file:
-            # 创建保存文件的文件夹路径
+            # create save directory
             assignment_path = os.path.join(app.config['UPLOAD_FOLDER'], selectedCourse, selectedAssignment)
             os.makedirs(assignment_path, exist_ok=True)
 
-            # 保存文件到指定目录
+            # save to specified directory
             file_extension = file.filename.rsplit('.', 1)[-1]
             new_filename = f"{session['user_id']}.{file_extension}"
             file.save(os.path.join(assignment_path, new_filename))
@@ -221,7 +262,7 @@ from flask import request, render_template, session
 
 @app.route('/quizPage_student', methods=['GET', 'POST'])
 def quizPage_student():
-    submitted = False  # 默认情况下，submitted为False
+    submitted = False  # default submitted as False
 
     selectedCourse = session.get('selectedCourse')
     
@@ -237,12 +278,12 @@ def quizPage_student():
     if selectedCourse is None or selectedQuiz is None:
         return "Error: No selected course or quiz"
 
-    # 获取当前最高分数
+    # get grade
     conn = sqlite3.connect('tutorial.db')
-    cur = conn.cursor()
+    # cur = conn.cursor()
     cur.execute("SELECT grade FROM grades WHERE courseName=? AND assignment=? AND studentId=?", (selectedCourse, selectedQuiz, user_id))
     highest_score = cur.fetchone()
-    conn.close()
+    # conn.close()
 
     if highest_score:
         highest_score = highest_score[0]
@@ -252,23 +293,23 @@ def quizPage_student():
         correct_answers = {}
         result = {}
 
-        # 获取学生的答案
+        # get student ans
         for key, value in request.form.items():
             if key.startswith('question_'):
                 quiz_number = int(key.split('_')[-1])
                 student_answers[quiz_number] = value
 
-        # 连接数据库并获取正确答案
-        conn = sqlite3.connect('tutorial.db')
-        cur = conn.cursor()
+        # get correct ans
+        # conn = sqlite3.connect('tutorial.db')
+        # cur = conn.cursor()
         cur.execute("SELECT QuizNumber, Answer FROM quiz WHERE Course=? AND QuizName=?", (selectedCourse, selectedQuiz))
         rows = cur.fetchall()
         for row in rows:
             quiz_number, answer = row
             correct_answers[quiz_number] = answer
-        conn.close()
+        # conn.close()
 
-        # 将学生答案与正确答案进行比较
+        # compare student ans with correct ans
         correct_count = 0
         for quiz_number, answer in student_answers.items():
             if answer == correct_answers.get(quiz_number):
@@ -277,34 +318,33 @@ def quizPage_student():
             else:
                 result[quiz_number] = "Incorrect"
 
-        submitted = True  # 设置submitted为True，表示已提交
+        submitted = True  
 
-        # 计算得分
+        # calculate score
         grade = f"{correct_count}/{len(correct_answers)}"
 
-        # 连接数据库并存储成绩
-        conn = sqlite3.connect('tutorial.db')
-        cur = conn.cursor()
+        # store grafe
+        # conn = sqlite3.connect('tutorial.db')
+        # cur = conn.cursor()
 
-        # 如果数据库中已存在相同记录，则先删除
+        # if record exist, delete
         cur.execute("DELETE FROM grades WHERE courseName=? AND assignment=? AND studentId=?", (selectedCourse, selectedQuiz, user_id))
 
-        # 插入新的成绩记录
+        # insert new grade
         cur.execute("INSERT INTO grades (courseName, assignment, studentId, grade) VALUES (?, ?, ?, ?)", (selectedCourse, selectedQuiz, user_id, grade))
-        conn.commit()
-        conn.close()
+        con.commit()
+        # conn.close()
 
         return render_template('quizPage_student.html', result=result, correct_count=correct_count, total_questions=len(correct_answers), submitted=submitted, highest_score=highest_score)
 
     else:
-        conn = sqlite3.connect('tutorial.db')
-        cur = conn.cursor()
+        # conn = sqlite3.connect('tutorial.db')
+        # cur = conn.cursor()
 
-        # 获取与选定课程和测验名称匹配的条目
         cur.execute("SELECT * FROM quiz WHERE Course=? AND QuizName=?", (selectedCourse, selectedQuiz))
         quiz_questions = cur.fetchall()
 
-        conn.close()
+        # conn.close()
 
         return render_template('quizPage_student.html', quiz_questions=quiz_questions, submitted=submitted, highest_score=highest_score)
 
@@ -322,25 +362,25 @@ def teacherHomePage():
     return render_template("teacherHomePage.html", courses = courses)
 
 # coursePage_teacher
-# 教师在课程页面上传作业，最后要把储存到数据库中的assignmentName改成“教师id+assignment”， courses改成对应课程
+# teacher upload assignment on course page，store assignment(assignmentName)as “teacherId+assignment”，change course to corresponding course
 @app.route("/coursePage_teacher", methods=['GET', 'POST'])
 def coursePage_teacher():
     selectedCourse=request.args.get('type')
     session['selectedCourse']=selectedCourse
-    # 查询数据库以获取与selectedCourse匹配的条目
-    conn = sqlite3.connect("tutorial.db")
-    cur = conn.cursor()
+    # get distinct quizes in selectedCourse
+    # conn = sqlite3.connect("tutorial.db")
+    # cur = conn.cursor()
     cur.execute("SELECT DISTINCT QuizName FROM quiz WHERE Course=?", (selectedCourse,))
     quiz_rows = cur.fetchall()
     
 
-    # 创建一个quizList，仅包含唯一的QuizName
+    # create quizList，with unique QuizName
     quizList = [row[0] for row in quiz_rows]
     print(quizList)
 
     assignmentList = cur.execute("SELECT * FROM assignment WHERE courseName=?",(selectedCourse,)).fetchall()
 
-    conn.close()
+    # conn.close()
 
     success_message = None
     if 'success' in session:
@@ -390,7 +430,7 @@ def add_assignment_page():
                 # Save assignment details to database
                 cur.execute("INSERT INTO assignment (assignmentName, courseName, assignmentFullMark) VALUES (?, ?, ?)", (assignment_name, selected_course, assignment_full_mark))              
                 con.commit()
-                con.close()
+                # con.close()
 
                 flash('Assignment created successfully!', 'success')  # Flash success message
                 return redirect(url_for('coursePage_teacher', type=selected_course))
@@ -410,21 +450,21 @@ def create_quiz():
         quiz_name = request.form['quizName']
         course = session.get('selectedCourse', None)
 
-        conn = sqlite3.connect('tutorial.db')
-        cur = conn.cursor()
+        # conn = sqlite3.connect('tutorial.db')
+        # cur = conn.cursor()
 
         try:
             selected_course = session['selectedCourse']
-            # 检查是否已经存在同名测验
+            # duplicate name check
             cur.execute("SELECT QuizName FROM quiz WHERE QuizName=? AND Course=?", (quiz_name, course))
             existing_quiz = cur.fetchone()
             if existing_quiz:
                 flash('A quiz with the same name already exists. Please choose a different name.', 'error')
                 return redirect(url_for('create_quiz'))
 
-            # 遍历表单中的每道题目
+            # traverse all questions
             for key, value in request.form.items():
-                # 如果字段名称以 "question_" 开头，说明是题目相关字段
+                # if start with "question_" it's the question
                 if key.startswith('question_'):
                     question_number = key.split('_')[-1]
                     question = request.form[f'question_{question_number}']
@@ -434,21 +474,19 @@ def create_quiz():
                     option_d = request.form[f'optionD_{question_number}']
                     answer = request.form[f'answer_{question_number}']
 
-                    # 插入题目数据
+                    # insert quiz
                     cur.execute('''INSERT INTO quiz (QuizName, Course, QuizNumber, Question, OptionA, OptionB, OptionC, OptionD, Answer) 
                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (quiz_name, course, question_number, question, option_a, option_b, option_c, option_d, answer))
 
-            # 提交事务并关闭连接
-            conn.commit()
-            conn.close()
+            con.commit()
+            # conn.close()
 
             flash('Quiz created successfully!', 'success')  # Flash success message
             return redirect(url_for('coursePage_teacher', type=selected_course))
 
-        # 处理异常情况
         except Exception as e:
-            conn.rollback()
-            conn.close()
+            # conn.rollback()
+            # conn.close()
             print(f"Error: {e}")
 
     return render_template('createQuiz.html')
@@ -461,9 +499,9 @@ def assignmentPage_teacher():
     assignmentName = selectedAssignment
     selectedCourse = session['selectedCourse']
     session['selectedAssignment'] = selectedAssignment
-    folder_path = os.path.join("C:/Users/Haozhe XU/Desktop/COSC310/server", selectedCourse, selectedAssignment)
+    folder_path = os.path.join(paraPath, selectedCourse, selectedAssignment)
     
-    # 仅遍历以3开头的文件
+    # only go through student submissions(start with 3)
     submissionList = [file_name for file_name in os.listdir(folder_path) if file_name.startswith('3')]
     length = len(submissionList)
     gradeList = []
@@ -493,17 +531,17 @@ def quizPage_teacher():
     selected_course = session.get('selectedCourse')
     session['selectedQuiz'] = selected_quiz
 
-    conn = sqlite3.connect("tutorial.db")
-    cur = conn.cursor()
+    # conn = sqlite3.connect("tutorial.db")
+    # cur = conn.cursor()
 
-    # 查询成绩表中符合条件的记录
+    # get grade records
     cur.execute("SELECT studentId, grade FROM grades WHERE courseName=? AND assignment=?", (selected_course, selected_quiz))
     grade_records = cur.fetchall()
 
-    # 提取学生ID和成绩
+    # get ID and grade
     grade_info = [{'studentId': record[0], 'grade': record[1]} for record in grade_records]
 
-    conn.close()
+    # conn.close()
 
     return render_template('quizPage_teacher.html', quizName=quiz_name, gradeInfo=grade_info)
 
@@ -519,43 +557,43 @@ def quizPage_teacher():
 
 @app.route("/courses", methods=['GET', 'POST'])
 def courses():
-    # 检查用户是否已登录
+    # check if logged in
     if 'user_id' not in session:
         return "User not logged in"
 
-    # 获取用户ID
+    # get ID
     user_id = session['user_id']
 
-    # 获取用户已选课程列表
+    # get enrolled courses
     user_courses = cur.execute("SELECT courses FROM users WHERE id = ?", (user_id,)).fetchone()
     if user_courses:
         user_courses = user_courses[0]
     else:
         return "User not found"
 
-    # 获取所有课程列表
+    # get all courses
     courseList = cur.execute("SELECT * FROM courses").fetchall()
 
     if request.method == 'POST':
         student_input = request.form.get("student_input", None)
         if student_input:
-            # 检查用户输入的课程是否已经在用户已选课程列表中
+            # check if selected course in all courses
             if student_input in user_courses:
                 return render_template('courses.html', status="course already selected", courseList=courseList)
             
-            # 检查用户是否已经发送过申请
-            existing_applications = cur.execute("SELECT courseName FROM application WHERE studentId = ?", (user_id,)).fetchall()
+            # check if appication has been sent before
+            existing_applications = cur.execute("SELECT courseName FROM application WHERE studentId = ? AND courseName=?", (user_id,student_input)).fetchall()
             if existing_applications:
                 for app_course in existing_applications:
                     if app_course[0] == student_input:
                         return render_template('courses.html', status="application already sent", courseList=courseList)
             
-            # 检查用户输入的课程是否存在于课程表中
+            # check if input is an existing course
             course_exists = cur.execute("SELECT * FROM courses WHERE courseName = ?", (student_input,)).fetchone()
             if not course_exists:
                 return render_template('courses.html', status="course does not exist", courseList=courseList)
 
-            # 发送申请
+            # send application
             try:
                 lock.acquire(True)
                 cur.execute("INSERT INTO application (studentId, courseName) VALUES (?, ?)", (user_id, student_input))
@@ -578,9 +616,9 @@ def courses():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     return render_template('upload.html')
-# upload file
-#更改路径至'C:\Users\Haozhe XU\Desktop\COSC310\server\课程名'
 
+# upload file
+#change directory to 'server\course name'
 @app.route('/uploader', methods=['GET', 'POST'])
 def uploader():
     """
@@ -589,8 +627,8 @@ def uploader():
     if request.method == 'POST':
         f = request.files['file']
         
-        #更改文件名，最后替换成对应页面的id
-        f.filename = '123' + os.path.splitext(f.filename)[1]
+        #change file name to corresponding id
+        # f.filename = '123' + os.path.splitext(f.filename)[1]
 
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
         print(request.files, f.filename)
@@ -611,7 +649,7 @@ def adminHomePage():
 # create courses
 # create course folder function
 def create_course_folder(course_name):
-    folder_path = os.path.join("C:\\Users\\Haozhe XU\\Desktop\\COSC310\\server", course_name)
+    folder_path = os.path.join(paraPath, course_name)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     else:
@@ -626,8 +664,8 @@ def createCoursePage():
         instructor = request.form.get("instructor", None)
         data = (courseName, instructor)
         try:
-            con = sqlite3.connect("tutorial.db")
-            cur = con.cursor()
+            # con = sqlite3.connect("tutorial.db")
+            # cur = con.cursor()
             
             # Check if course already exists
             cur.execute("SELECT * FROM courses WHERE courseName=?", (courseName,))
@@ -655,7 +693,8 @@ def createCoursePage():
         except sqlite3.Error as e:
             print("Error inserting course:", e)
         finally:
-            con.close()
+            # con.close()
+            print()
     
     # Fetch instructors whose usernames start with '2'
     users = get_instructors()
@@ -664,15 +703,17 @@ def createCoursePage():
 
 def get_instructors():
     try:
-        con = sqlite3.connect("tutorial.db")
-        cur = con.cursor()
+        # con = sqlite3.connect("tutorial.db")
+        # cur = con.cursor()
         cur.execute("SELECT name FROM users WHERE id LIKE '2%'")
         rows = cur.fetchall()
         users = [row[0] for row in rows]
     except sqlite3.Error as e:
         print("Error fetching users:", e)
     finally:
-        con.close()
+        # con.close()
+        print()
+        
 
     return users
 
@@ -680,106 +721,104 @@ def get_instructors():
 
 
 
-@app.route("/AdminRequests",methods=['GET','POST'])
+@app.route("/AdminRequests", methods=['GET', 'POST'])
 def AdminRequests():
-    applicationList = []
-    length = 0
-    applicationList=cur.execute("SELECT * FROM application").fetchall()
-    if len(applicationList)==0:
-        return render_template('AdminRequests.html',applicationList=applicationList,length=length)
-    length=len(applicationList)
-    # get all applications
-    try:
-        lock.acquire(True)
-        # for i in range(length):
-        approved=request.form.get("numberApproved")
-        print(approved)
-        if approved is not None:
-            approved=int(approved)
-            print(approved)
-        else:
-            return render_template('AdminRequests.html',applicationList=applicationList,length=length)
-        studentId=applicationList[approved][0]
-        courseName=applicationList[approved][1]
-        data=(studentId,courseName)
-        # delete approved application
-        cur.execute("DELETE FROM application WHERE studentId=? AND courseName=?",data)
-        studentData=cur.execute("SELECT * FROM users WHERE id=%d" % studentId).fetchone()
-        stuCourses=studentData[3]
-        stuCourses=stuCourses+" "+courseName
-        newData=(studentData[0],studentData[1],studentData[2],stuCourses)
-        idData=(studentId,)
-        # update user table 
-        cur.execute("DELETE FROM users WHERE id=?",idData)
-        cur.execute("INSERT INTO users VALUES(?,?,?,?)",newData)
-        con.commit()
-    finally:
-        lock.release()
-    return render_template('AdminRequests.html',applicationList=applicationList,length=length)
+    # con = sqlite3.connect('your_database.db')  # Adjust with your actual database path
+    # cur = con.cursor()
+    applicationList = cur.execute("SELECT * FROM application").fetchall()
+    length = len(applicationList)
+
+    if request.method == 'POST':
+        try:
+            for i in range(length):
+                # Check if each application was approved
+                if request.form.get(f'approve{i}') is not None:
+                    studentId, courseName = applicationList[i][:2]
+                    data = (studentId, courseName)
+
+                    # Process the approval
+                    cur.execute("DELETE FROM application WHERE studentId=? AND courseName=?", data)
+
+                    studentData = cur.execute("SELECT * FROM users WHERE id=?", (studentId,)).fetchone()
+                    stuCourses = studentData[3] + " " + courseName
+                    newData = (studentData[0], studentData[1], studentData[2], stuCourses)
+
+                    # Update the users table
+                    cur.execute("DELETE FROM users WHERE id=?", (studentId,))
+                    cur.execute("INSERT INTO users VALUES(?,?,?,?)", newData)
+                    con.commit()
+        finally:
+            # con.close()
+            print("??")
+
+    # Reload the page with updated application list
+    applicationList = cur.execute("SELECT * FROM application").fetchall()
+    length = len(applicationList)
+    return render_template('AdminRequests.html', applicationList=applicationList, length=length)
 
 
 
 
 
-@app.route("/dashBoard",methods=['GET','POST'])
-def dashBoard():
+# @app.route("/dashBoard",methods=['GET','POST'])
+# def dashBoard():
 
-    user=cur.execute("SELECT * FROM users WHERE id=%d"%session['user_id']).fetchone()
-    print(session['user_id'])
-    print(user)
-    courses=user[3].split()
-    role=user[0]
-    if role>3000:
-        roleNum=3#student
-    elif role>2000:
-        roleNum=2#instructor
-    else:
-        roleNum=1#admin
+#     user=cur.execute("SELECT * FROM users WHERE id=%d"%session['user_id']).fetchone()
+#     print(session['user_id'])
+#     print(user)
+#     courses=user[3].split()
+#     role=user[0]
+#     if role>3000:
+#         roleNum=3#student
+#     elif role>2000:
+#         roleNum=2#instructor
+#     else:
+#         roleNum=1#admin
     
-    return render_template('dashBoard.html',courses=courses,roleNum=roleNum)
+#     return render_template('dashBoard.html',courses=courses,roleNum=roleNum)
 
-@app.route("/coursePage",methods=['GET','POST'])
-def coursePage():
-    selectedCourse=request.args.get('type')
-    session['selectedCourse']=selectedCourse
-    return render_template('coursePage.html')
+# @app.route("/coursePage",methods=['GET','POST'])
+# def coursePage():
+#     selectedCourse=request.args.get('type')
+#     session['selectedCourse']=selectedCourse
+#     return render_template('coursePage.html')
 
-@app.route("/assignmentPage",methods=['GET','POST'])
-def assignmentPage():
-    #select which assignment, e.g. A1, A2    
-    course=session['selectedCourse']
-    print(course)
-    assignments=cur.execute("SELECT * FROM assignments WHERE courseName='%s'"%course).fetchall()
-    print(assignments)
-    assignmentList=list()
-    for a in assignments:
-        assignmentList.append(a[1])
-    print(assignmentList)
-    return render_template('assignmentPage.html',assignments=assignmentList)
+# @app.route("/assignmentPage",methods=['GET','POST'])
+# def assignmentPage():
+#     #select which assignment, e.g. A1, A2    
+#     course=session['selectedCourse']
+#     print(course)
+#     assignments=cur.execute("SELECT * FROM assignments WHERE courseName='%s'"%course).fetchall()
+#     print(assignments)
+#     assignmentList=list()
+#     for a in assignments:
+#         assignmentList.append(a[1])
+#     print(assignmentList)
+#     return render_template('assignmentPage.html',assignments=assignmentList)
 
-@app.route("/assignment",methods=['GET','POST'])
-def assignment():
-    #select which student, e.g. 3001, 3002
-    selectedAssignment=request.args.get('type')
-    session['selectedAssignment']=selectedAssignment
-    studentAssignments=[3001,3002,3003]
-    return render_template('assignment.html',studentAssignments=studentAssignments)
+# @app.route("/assignment",methods=['GET','POST'])
+# def assignment():
+#     #select which student, e.g. 3001, 3002
+#     selectedAssignment=request.args.get('type')
+#     session['selectedAssignment']=selectedAssignment
+#     studentAssignments=[3001,3002,3003]
+#     return render_template('assignment.html',studentAssignments=studentAssignments)
 
-@app.route("/grading",methods=['GET','POST'])
-def grading():
-    selectedStudent=request.args.get('type')
-    session['selectedStudent']=selectedStudent
+# @app.route("/grading",methods=['GET','POST'])
+# def grading():
+#     selectedStudent=request.args.get('type')
+#     session['selectedStudent']=selectedStudent
     
-    #get instructor input
-    data=(session['selectedCourse'],session['selectedAssignment'],selectedStudent)
-    grade=cur.execute("SELECT grade FROM grades WHERE courseName=? AND assignment=? AND studentId=?",data)
-    try:
-        lock.acquire(True)
-        cur.execute("INSERT INTO grades VALUES(?,?,?,?)",data)
-        con.commit()
-    finally:
-        lock.release()
-    return render_template('grading.html')
+#     #get instructor input
+#     data=(session['selectedCourse'],session['selectedAssignment'],selectedStudent)
+#     grade=cur.execute("SELECT grade FROM grades WHERE courseName=? AND assignment=? AND studentId=?",data)
+#     try:
+#         lock.acquire(True)
+#         cur.execute("INSERT INTO grades VALUES(?,?,?,?)",data)
+#         con.commit()
+#     finally:
+#         lock.release()
+#     return render_template('grading.html')
 
 
 
@@ -798,10 +837,10 @@ def TeacherGrade():
 
     if request.method == 'POST':
         try:
-            # 删除原始记录
+            # delete old record
             searchData = (courseName, assignmentName, studentId)
             cur.execute("DELETE FROM grades WHERE courseName=? AND assignment=? AND studentId=?", searchData)
-            # 插入新记录
+            # insert new record
             data = (courseName, assignmentName, studentId, newGrade)
             lock.acquire(True)
             cur.execute("INSERT INTO grades VALUES (?, ?, ?, ?)", data)

@@ -117,15 +117,41 @@
         border-radius: 5px;
         cursor: pointer;
     }
+
+    .flash-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    .success {
+        background-color: #4CAF50; /* 绿色背景 */
+        color: white;
+    }
+    
+    .error {
+        background-color: #f44336; /* 红色背景 */
+        color: white;
+    }
+    
 </style>
 </head>
 <body>
-
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
 <div class="sidebar">
     <div class="sidebar-content">
         <h2>Dashboard</h2>
         <a href="#">Home</a>
-        <a href="#">Requests</a>
+        <a href="AdminRequests">Requests</a>
+        <a href="createCoursePage">Add course</a>
     </div>
     <div class="admin-info">
         <h3>Admin Info</h3>
@@ -133,13 +159,43 @@
         <p>{{g.user[0]}}</p>
     </div>
     <div class="sign-out-container">
-        <a class="sign-out" href="sign-out-page.html">Sign Out</a>
+        <a class="sign-out" href="profile">edit</a>
+        <a class="sign-out" href="login">Sign Out</a>
     </div>
 </div>
 
 <div class="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-message-container">
+                <div id="flash-message" class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            </div>
+            <script>
+                // 自动隐藏消息
+                setTimeout(function() {
+                    var flashMessage = document.getElementById('flash-message');
+                    if (flashMessage) {
+                        flashMessage.style.opacity = '0';
+                        setTimeout(function() {
+                            flashMessage.style.display = 'none';
+                        }, 300); // 延迟隐藏动画时间
+                    }
+                }, 3000); // 3秒后隐藏
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
     <h1>All Courses</h1>
-    <button class="add-course-btn" onclick="toggleForm()">+ Add Course</button>
+    {% for course in courses %}
+    <a href="{{url_for('coursePage_student', type=course)}}" class="course-link">
+        <div class="course">
+            <h2>{{course}}</h2>
+        </div>
+    </a>
+    {% endfor %}
     <div class="add-course-form">
         <div class="form-field">
             <label for="courseName">Course Name:</label>
@@ -159,10 +215,6 @@
             </div>
             </div>
             <!-- Wrapped course blocks in anchor tags for redirection -->
-            <a href="course-details-cosc310.html" class="course-link">
-            <div class="course">
-            <h2>COSC 310</h2>
-            <p>2023W2 Software Engineering</p>
             </div>
             </a>
             <!-- Repeat for each course with specific course detail page links -->

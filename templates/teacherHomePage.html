@@ -90,8 +90,7 @@
     <div class="sidebar-content">
         <h2>Dashboard</h2>
         <a href="#">Home</a>
-        <a href="#">Assignments</a>
-        <a href="#">Discussion</a>
+        <a href="discussions">Discussion</a>
     </div>
     <div class="Teacher-info">
         <h3>Teacher Info</h3>
@@ -100,26 +99,23 @@
     </div>
     <!-- Sign Out Button -->
     <div class="sign-out-container">
-        <a class="sign-out" href="sign-out-page.html">Sign Out</a>
+        <a class="sign-out" href="profile">edit</a>
+        <a class="sign-out" href="login">Sign Out</a>
     </div>
 </div>
 
 <div class="main-content">
     <h1>Courses</h1>
+    
     <!-- Wrapped course blocks in anchor tags for redirection -->
-    <a href="course-details-cosc310.html" class="course-link">
+    {% for course in courses %}
+    <a href="{{url_for('coursePage_teacher', type=course)}}" class="course-link">
         <div class="course">
-            <h2>COSC 310</h2>
-            <p>2023W2 Software Engineering</p>
+            <h2>{{course}}</h2>
         </div>
     </a>
-    <a href="course-details-cosc310.html" class="course-link">
-        <div class="course">
-            <h2>COSC 310</h2>
-            <p>2023W2 Software Engineering</p>
-        </div>
-    </a>
-    <!-- Repeat for each course with specific course detail page links -->
+    {% endfor %}
+    
 </div>
 
 </body>

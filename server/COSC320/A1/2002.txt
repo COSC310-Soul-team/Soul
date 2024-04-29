@@ -1,0 +1,49 @@
+// C++ code
+//
+int ledPin=3;
+int buzzerPin=8;
+int rpin=13;
+int bpin=11;
+int gpin=10;
+int tempSensorVal=0;
+int lightSensorVal=0;
+//int lightSensorVal=0;
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(A0, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(A1, INPUT);
+  pinMode(rpin, OUTPUT);
+  pinMode(bpin, OUTPUT);
+  pinMode(gpin, OUTPUT);
+  pinMode(A2, INPUT);
+}
+
+void loop()
+{
+  analogWrite(ledPin, 0);//close light
+
+  tempSensorVal=analogRead(A0);
+  lightSensorVal=analogRead(A1);
+  boolean motionSensor=analogRead(A2);
+  int lightVal=map(lightSensorVal,0, 1023, 0, 100);
+
+  if (tempSensorVal>200){
+    //if temperature is too high, start buzzer for 1 second
+  	tone(8,600,1000);
+  }
+  if (lightSensorVal<1000){
+    //turn on yellow light if too dark
+  	analogWrite(rpin, 255);
+    analogWrite(gpin, 255);
+  }else{
+    analogWrite(rpin, 0);
+    analogWrite(gpin, 0);
+  }
+  
+  if (motionSensor==1){
+    //open light if motion detected
+  	analogWrite(ledPin, 255);
+  }
+}

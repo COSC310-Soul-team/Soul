@@ -48,15 +48,88 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            display: block;
+            margin: 0 auto;
         }
         input[type="submit"]:hover {
             background-color: #45a049;
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            font-family: Arial, sans-serif;
+        }
+        .admin-page-link {
+            text-decoration: none;
+        }
+    
+        .admin-page-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s ease;
+        }
+    
+        .admin-page-button:hover {
+            background-color: #45a049;
+        }
+
+        ..flash-message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .success {
+            background-color: #4CAF50; /* 绿色背景 */
+            color: white;
+        }
+        
+        .error {
+            background-color: #f44336; /* 红色背景 */
+            color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Add Course</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-message-container">
+                <div id="flash-message" class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            </div>
+            <script>
+                // 自动隐藏消息
+                setTimeout(function() {
+                    var flashMessage = document.getElementById('flash-message');
+                    if (flashMessage) {
+                        flashMessage.style.opacity = '0';
+                        setTimeout(function() {
+                            flashMessage.style.display = 'none';
+                        }, 300); // 延迟隐藏动画时间
+                    }
+                }, 3000); // 3秒后隐藏
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
         <form action="/createCoursePage" method="POST" action="#">
             <label for="course_name">Course Name:</label>
             <input type="text" id="courseName" name="courseName" required><br><br>
@@ -71,5 +144,12 @@
             <input type="submit" value="Create">
         </form>
     </div>
+    
+    <br>
+    <a href="/adminHomePage" style="text-decoration: none;">
+        <button style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #4CAF50; color: #fff; cursor: pointer; display: block; margin: 0 auto; transition: background-color 0.3s ease;">
+            Return to Admin Page
+        </button>
+    </a>
 </body>
 </html>

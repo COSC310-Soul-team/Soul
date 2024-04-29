@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
+<title>Teacher Assignments</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -29,7 +30,7 @@
     .sidebar-content h2, .sign-out-container a {
         margin-left: 10px;
     }
-    .student-info {
+    .teacher-info {
         margin-top: 10px;
         border-top: 1px solid #ddd;
         padding-top: 10px;
@@ -59,7 +60,7 @@
         text-decoration: none;
         background-color: transparent;
     }
-    .student-info h3, .student-info p {
+    .teacher-info h3, .teacher-info p {
         margin: 0;
         padding: 0;
         font-size: 16px;
@@ -71,51 +72,87 @@
         overflow-y: auto;
         height: 100vh;
     }
-    .course {
+    /* Updated styles for the discussion form */
+    .discussion-form {
         background-color: #e7e7e7;
-        margin: 10px 0;
         padding: 20px;
         border-radius: 8px;
         max-width: 700px;
     }
-    .course-link {
-        text-decoration: none;
-        color: black;
+    .discussion-form label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .discussion-form input[type="text"], .discussion-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 20px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .discussion-form input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .discussion-form input[type=submit]:hover {
+        background-color: #45a049;
     }
 </style>
 </head>
 <body>
 
+<!-- Sidebar Content -->
 <div class="sidebar">
     <div class="sidebar-content">
         <h2>Dashboard</h2>
-        <a href="studentHomePage">Home</a>
-        <a href="courses">Browse courses</a>
+        
+        {% if g.user[0]//1000 == 3 %}
+            <a href="studentHomePage">Home</a>
+        {% else %}
+            <a href="teacherHomePage">Home</a>
+        {% endif %}
+
+        {% if g.user[0]//1000 == 3 %}
+            <a href="courses">Browse courses</a>
+        {% endif %}
         <a href="discussions">Discussion</a>
     </div>
-    <div class="student-info">
-        <h3>Student Info</h3>
-        <p>{{g.user[1]}}</p>
-        <p>{{g.user[0]}}</p>
+    <div class="teacher-info">
+        {% if g.user[0]//1000 == 3 %}
+            <h3>Student Info</h3>
+        {% else %}
+            <h3>Teacher Info</h3>
+        {% endif %}
+        <p>{{ g.user[1] }}</p>
+        <p>{{ g.user[0] }}</p>
     </div>
     <!-- Sign Out Button -->
     <div class="sign-out-container">
         <a class="sign-out" href="profile">edit</a>
-        <a class="sign-out" href="login">Sign Out</a>
+        <a class="sign-out" href="/login">Sign Out</a>
     </div>
 </div>
 
+<!-- Main Content -->
 <div class="main-content">
-    <h1>My Courses</h1>
-    <!-- Wrapped course blocks in anchor tags for redirection -->
-    {% for course in courses %}
-    <a href="{{url_for('coursePage_student', type=course)}}" class="course-link">
-        <div class="course">
-            <h2>{{course}}</h2>
-        </div>
-    </a>
-    {% endfor %}
-    <!-- Repeat for each course with specific course detail page links -->
+    <form class="discussion-form" method="post">
+        <h1>New Discussion</h1>
+        <label for="discussionTitle">Title:</label>
+        <input type="text" id="discussionTitle" name="discussionName" placeholder="Enter Title">
+
+        <label for="discussionContent">Content:</label>
+        <textarea id="discussionContent" name="discussionContent" placeholder="Enter your discussion..." style="height:200px"></textarea>
+
+        <input type="submit" value="Submit discussion">
+    </form>
 </div>
 
 </body>

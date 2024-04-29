@@ -58,11 +58,33 @@
         .results li {
             margin-bottom: 5px;
         }
+
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #5bc0de; /* 淡蓝色 */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-button a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background-color: #46b8da; /* 深一点的淡蓝色 */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Quiz</h1>
+        <p>Current Score: {% if highest_score %}{{ highest_score }}{% else %}No answer yet{% endif %}</p>
         <form action="/quizPage_student" method="POST">
             {% for question in quiz_questions %}
                 <div class="question">
@@ -89,6 +111,10 @@
                 <p>Correctly answered {{ correct_count }} out of {{ total_questions }} questions.</p>
             </div>
         {% endif %}
+    </div>
+
+    <div class="back-button">
+        <a href="{{ url_for('coursePage_student', type=session['selectedCourse']) }}">Back to Course Page</a>
     </div>
 </body>
 </html>

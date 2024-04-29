@@ -67,9 +67,21 @@
 <body>
     <div class="container">
         <h1>Create Quiz</h1>
+
+        <!-- 显示错误消息 -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <form method="POST">
             <label for="quizName">Quiz Name:</label>
-            <input type="text" id="quizName" name="quizName">
+            <input type="text" id="quizName" name="quizName" required>
 
             <!-- 注意：course 默认为 NULL -->
             <input type="hidden" id="course" name="course" value="NULL">
